@@ -132,6 +132,43 @@
     if (p && p.catch) p.catch(() => { v.style.display = "none"; });
   }
 
+  // 메인 비주얼 슬라이더 (.hero .hero-slide + .hero-dots)
+  function setupHeroSlider() {
+    const hero = document.querySelector(".hero");
+    if (!hero) return;
+    const slides = hero.querySelectorAll(".hero-slide");
+    if (!slides.length) return;
+    if (slides.length < 2) { slides[0].classList.add("active"); return; }
+    const dotsWrap = hero.querySelector(".hero-dots");
+    let idx = 0, timer = null;
+    const dots = [];
+    const go = (i) => {
+      idx = (i + slides.length) % slides.length;
+      slides.forEach((s, k) => s.classList.toggle("active", k === idx));
+      dots.forEach((d, k) => d.classList.toggle("active", k === idx));
+      const v = slides[idx].querySelector("video");
+      if (v && v.play) { const pr = v.play(); if (pr && pr.catch) pr.catch(() => {}); }
+    };
+    const restart = () => { clearInterval(timer); timer = setInterval(() => go(idx + 1), 6000); };
+    if (dotsWrap) {
+      slides.forEach((_, i) => {
+        const b = document.createElement("button");
+        b.type = "button"; b.setAttribute("aria-label", (i + 1) + "번째 슬라이드");
+        b.addEventListener("click", () => { go(i); restart(); });
+        dotsWrap.appendChild(b); dots.push(b);
+      });
+    }
+    go(0); restart();
+  }
+
+  // 서브페이지 섹션 띠 교차 (짝수 .page-section 에 연베이지 배경)
+  function setupPageBands() {
+    document.querySelectorAll(".page-body .container").forEach((c) => {
+      const secs = [...c.children].filter((el) => el.classList.contains("page-section"));
+      secs.forEach((el, i) => { if (i % 2 === 1) el.classList.add("is-band"); });
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", async () => {
     await includeComponent(document.getElementById("site-header-placeholder"), "/components/header.html");
     await includeComponent(document.getElementById("site-footer-placeholder"), "/components/footer.html");
@@ -144,5 +181,7 @@
     setupCounters();
     setupTabs();
     setupHeroVideo();
+    setupHeroSlider();
+    setupPageBands();
   });
 })();

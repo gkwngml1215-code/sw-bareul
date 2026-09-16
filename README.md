@@ -86,7 +86,7 @@ tools/
 | 네이버 플레이스 | https://map.naver.com/p/entry/place/34778565 |
 | 네이버 예약 | https://m.booking.naver.com/booking/13/bizes/304582 |
 | 카카오톡 채널 | https://pf.kakao.com/_vAzCxd |
-| 유튜브 | https://www.youtube.com/@jssljh |
+| 유튜브 | https://www.youtube.com/channel/UCyoThJgImIwoGH0I2NojNXQ |
 | 블로그 · 카페 · 인스타 | blog.naver.com/wuminzhi · cafe.naver.com/nima32 · instagram.com/bareuljung.suwon |
 
 전화번호·진료시간·링크가 바뀌면 어드민 **홈페이지 설정**에서 고치면 `site.json` → 전체 페이지에 자동 반영됩니다. (`data-site="…"` 자리)
