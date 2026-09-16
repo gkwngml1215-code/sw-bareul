@@ -28,6 +28,7 @@
   aside { background:#101a33; color:#cfd8d3; padding:24px 0; position:sticky; top:0; height:100vh; }
   aside .brand { padding:0 22px 20px; border-bottom:1px solid rgba(255,255,255,.1); margin-bottom:14px; }
   aside .brand img { height:36px; background:#fff; padding:5px 10px; border-radius:6px; }
+  aside .brand div { color:#fff !important; font-size:13px !important; }
   aside .brand small { display:block; margin-top:8px; font-size:12px; color:#90a099; }
   aside nav a, aside nav button { display:block; width:100%; text-align:left; padding:12px 22px; color:#cfd8d3; background:none; border:0; font-size:14.5px; }
   aside nav a:hover, aside nav button:hover, aside nav a.active { background:rgba(255,255,255,.08); color:#fff; }
@@ -157,7 +158,7 @@
 <!-- 로그인 -->
 <div id="login">
   <form onsubmit="login(event)">
-    <img src="logo/logo-horizontal.png" alt="바를정한의원">
+    <img src="logo/symbol.png" alt="바를정한의원" style="height:44px;width:auto"><div style="font-weight:800;font-size:15px;margin:6px 0 4px">수원 바를정한의원</div>
     <h1>홈페이지 관리자</h1>
     <input type="password" id="pw" placeholder="비밀번호" autofocus autocomplete="current-password">
     <label id="rememberRow" class="hidden" style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);margin:0 0 12px;text-align:left"><input type="checkbox" id="remember" checked style="width:auto;margin:0"> 이 컴퓨터에서 로그인 유지</label>
@@ -170,7 +171,7 @@
 <!-- 앱 -->
 <div id="app" class="hidden">
   <aside>
-    <div class="brand"><img src="logo/logo-horizontal.png" alt="바를정한의원"><small>홈페이지 관리자</small></div>
+    <div class="brand"><img src="logo/symbol.png" alt="바를정한의원" style="height:44px;width:auto"><div style="font-weight:800;font-size:15px;margin:6px 0 4px">수원 바를정한의원</div><small>홈페이지 관리자</small></div>
     <nav>
       <a href="#list" id="navList" class="active">📋 게시글 목록</a>
       <a href="#new" id="navNew">✏️ 새 글 쓰기</a>

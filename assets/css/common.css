@@ -85,7 +85,10 @@ html, body { overflow-x: hidden; }
   max-width: var(--container); margin: 0 auto; padding: 0 20px;
   height: var(--header-h); display: flex; align-items: center; justify-content: space-between; gap: 16px;
 }
-.gnb-logo img { height: 44px; width: auto; }
+.gnb-logo { display: flex; align-items: center; gap: 10px; }
+.gnb-logo img { height: 42px; width: auto; }
+.gnb-wordmark { font-family: var(--serif); font-size: 24px; font-weight: 600; color: var(--primary-dark); letter-spacing: -.02em; line-height: 1; white-space: nowrap; }
+.gnb-wordmark small { display: block; font-family: var(--sans); font-size: 11px; font-weight: 600; color: var(--accent); letter-spacing: .2em; margin-bottom: 3px; }
 .gnb-menu { display: flex; align-items: center; gap: 0; }
 .gnb-menu > li { position: relative; }
 .gnb-menu > li > a {
