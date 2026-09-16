@@ -232,6 +232,20 @@ function renderCard(post) {
       </a>`;
 }
 
+// 메인 페이지 공지 목록(<!-- notices:start --> ~ <!-- notices:end -->)을 최신 공지 5개로 다시 씀
+function rebuildHomeNotices(published) {
+  const file = path.join(ROOT, "index.html");
+  if (!fs.existsSync(file)) return;
+  const html = fs.readFileSync(file, "utf8");
+  if (!/<!-- notices:start -->/.test(html)) return;
+  const list = published.filter((p) => slugOfCategory(p.category) === "notice").slice(0, 5);
+  const items = list.length
+    ? list.map((p) => `          <li><a href="/pages/columns/${esc(p.slug)}"><span>${esc(p.title)}</span><time datetime="${esc(p.published)}">${esc(String(p.published).replace(/-/g, "."))}</time></a></li>`).join("\n")
+    : `          <li><a href="/pages/columns/notice"><span>등록된 공지가 없습니다.</span></a></li>`;
+  const out = html.replace(/<!-- notices:start -->[\s\S]*?<!-- notices:end -->/, `<!-- notices:start -->\n${items}\n          <!-- notices:end -->`);
+  if (out !== html) fs.writeFileSync(file, out);
+}
+
 function replaceBlock(html, cards) {
   return html.replace(/<!-- posts:start -->[\s\S]*?<!-- posts:end -->/, `<!-- posts:start -->\n${cards}\n      <!-- posts:end -->`);
 }
@@ -243,6 +257,7 @@ function rebuildIndex(posts) {
   let html = fs.readFileSync(INDEX_FILE, "utf8");
   const cards = published.length ? published.map(renderCard).join("\n\n") : `      <p class="muted">아직 등록된 글이 없습니다.</p>`;
   fs.writeFileSync(INDEX_FILE, replaceBlock(html, cards));
+  rebuildHomeNotices(published);
 
   if (!fs.existsSync(CATEGORY_TEMPLATE)) return;
   const tpl = fs.readFileSync(CATEGORY_TEMPLATE, "utf8");
