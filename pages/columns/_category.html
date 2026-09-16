@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{CAT}} | 수원 바를정한의원</title>
+<meta name="description" content="수원 바를정한의원 {{CAT}}. {{DESC}}">
+<link rel="icon" type="image/png" href="/assets/img/main/tit_logo.png">
+<link rel="stylesheet" href="/assets/css/common.css">
+<link rel="stylesheet" href="/assets/css/page.css">
+</head>
+<body>
+
+<div id="site-header-placeholder"></div>
+
+<section class="sub-hero" style="background-image:url('{{HERO}}')">
+  <div class="container">
+    <div class="breadcrumb"><a href="/">홈</a> &gt; <a href="/pages/columns/">상담 · 후기</a> &gt; {{CAT}}</div>
+    <h1>{{CAT}}</h1>
+    <p class="lead">{{DESC}}</p>
+  </div>
+</section>
+
+<div class="page-body wide">
+  <div class="container">
+
+    <!-- 카테고리 필터 (tools/column-render.js 가 생성) -->
+    <div class="post-filter">
+      <a href="/pages/columns/">전체</a>
+      {{FILTER}}
+      <a href="/consult" style="margin-left:auto">온라인 상담</a>
+    </div>
+
+    <!-- 아래 목록은 어드민/빌드가 자동으로 다시 씁니다. 손으로 고치지 마세요 -->
+    <div class="post-list {{LAYOUT}}" id="post-list" data-category="{{CAT}}">
+      <!-- posts:start -->
+      <!-- posts:end -->
+    </div>
+
+    <div class="page-cta" style="margin-top:50px">
+      <h3>궁금한 점이 있다면</h3>
+      <p>카카오톡 채널로 편하게 질문해 주세요. 사진 · 검사지 상담도 가능합니다.</p>
+      <div class="btns">
+        <a href="https://pf.kakao.com/_vAzCxd" data-site-href="kakao" target="_blank" rel="noopener" class="btn btn-accent">카카오톡 상담</a>
+        <a href="https://m.booking.naver.com/booking/13/bizes/304582?theme=place&entry=pll&lang=ko&area=pll" data-site-href="naverBooking" target="_blank" rel="noopener" class="btn btn-primary">네이버 예약</a>
+        <a href="tel:0312173375" data-site-href="tel" data-site="phone" class="btn btn-outline-dark">031-217-3375</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="site-footer-placeholder"></div>
+<script src="/assets/js/nav.js"></script>
+</body>
+</html>

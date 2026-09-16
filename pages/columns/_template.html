@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- ① 제목: 핵심 키워드를 앞에, 50자 내외. 뒤에 "| 카테고리 | 수원 바를정한의원" 유지 -->
+<title>[글 제목: 질문형 또는 "키워드 + 무엇/왜/어떻게"] | 바를정 칼럼 | 수원 바를정한의원</title>
+<!-- ② 설명: 120~150자. 질문에 대한 답을 한 문장으로 먼저, 그다음 무엇을 다루는지 -->
+<meta name="description" content="[첫 문장에 결론. 예: 돌발성 난청은 발병 후 2주 이내 치료 시작이 중요합니다. …을 바를정한의원 의료진이 설명합니다.]">
+<!-- ③ 키워드: 지역+증상+치료 조합 3~5개 (쉼표 구분) -->
+<meta name="keywords" content="[예: 수원 돌발성난청, 돌발성난청 골든타임, 이명 한방치료]">
+<link rel="icon" type="image/png" href="/assets/img/main/tit_logo.png">
+<link rel="stylesheet" href="/assets/css/common.css">
+<link rel="stylesheet" href="/assets/css/page.css">
+</head>
+<body>
+
+<div id="site-header-placeholder"></div>
+
+<div class="page-body">
+  <div class="container">
+    <!-- ④ data-category / data-published / data-modified / data-image 는 구조화 데이터(JSON-LD) 생성에 쓰입니다. 날짜는 YYYY-MM-DD -->
+    <article class="post" data-category="[바를정 칼럼 | 치료 전후 사례 | 환자수기 | 언론보도 | 공지사항]" data-published="2026-01-01" data-modified="2026-01-01" data-image="/assets/img/[대표 이미지 경로]">
+
+      <header class="post-head">
+        <div class="breadcrumb" style="color:var(--muted);opacity:1"><a href="/">홈</a> &gt; <a href="/pages/columns/">상담 · 후기</a> &gt; <a href="/pages/columns/column">[카테고리]</a> &gt; [짧은 제목]</div>
+        <span class="cat">[카테고리]</span>
+        <!-- ⑤ h1은 페이지에 하나만. title 태그와 같거나 거의 같게 -->
+        <h1>[글 제목]</h1>
+        <div class="post-meta">
+          <span class="author"><img src="/assets/img/main/tit_logo.png" alt="수원 바를정한의원">수원 바를정한의원</span>
+          <span>발행 <time datetime="2026-01-01">2026년 1월 1일</time></span>
+          <span>읽는 시간 약 N분</span>
+        </div>
+      </header>
+
+      <!-- ⑥ 대표 이미지: alt 에 사진 내용을 문장으로. 환자 얼굴 사진은 동의 없이 사용하지 않기 -->
+      <div class="post-hero"><img src="/assets/img/[대표 이미지 경로]" alt="[이미지 설명]"></div>
+
+      <!-- ⑦ 핵심 요약: AI 검색·음성 답변이 그대로 가져갈 수 있는 3~4문장. 숫자·기간·횟수처럼 구체적인 사실을 넣기 -->
+      <section class="summary-box" aria-label="핵심 요약">
+        <h2>핵심 요약</h2>
+        <ul>
+          <li>[결론 1 — 가장 중요한 답]</li>
+          <li>[결론 2 — 이유 또는 원인]</li>
+          <li>[결론 3 — 치료/관리 방법]</li>
+          <li>[결론 4 — 언제 병원에 와야 하는지]</li>
+        </ul>
+      </section>
+
+      <!-- ⑧ 목차: h2 의 id 와 연결 -->
+      <nav class="toc" aria-label="목차">
+        <strong>목차</strong>
+        <ol>
+          <li><a href="#s1">[소제목 1]</a></li>
+          <li><a href="#s2">[소제목 2]</a></li>
+          <li><a href="#s3">[소제목 3]</a></li>
+          <li><a href="#faq">자주 묻는 질문</a></li>
+        </ol>
+      </nav>
+
+      <div class="post-body">
+        <!-- ⑨ 도입: 진료실 경험이나 환자 질문으로 시작 (2~3문단) -->
+        <p>[도입 문단]</p>
+
+        <!-- ⑩ 본문 h2는 질문형 또는 "무엇/왜/어떻게" 형태. 각 h2 바로 아래에 key-answer 로 한 문장 정답을 먼저 쓰고, 그다음 설명 -->
+        <h2 id="s1">[소제목 1 — 예: OO이란 어떤 질환인가]</h2>
+        <div class="key-answer"><strong>[용어]는</strong> [한 문장 정의].</div>
+        <p>[설명]</p>
+
+        <h2 id="s2">[소제목 2 — 예: 왜 생길까]</h2>
+        <p>[설명]</p>
+        <ul class="check-list">
+          <li>[항목]</li>
+          <li>[항목]</li>
+        </ul>
+
+        <h2 id="s3">[소제목 3 — 예: 바를정한의원은 어떻게 치료하나]</h2>
+        <div class="key-answer"><strong>[치료 요약 한 문장]</strong></div>
+        <p>[설명. 치료 기간·횟수는 "개인차가 있지만 보통 …" 형태로]</p>
+        <blockquote>[원장 말투의 한 줄 비유나 조언 — 선택]</blockquote>
+
+        <!-- ⑪ FAQ: 3~5개. 질문은 실제 환자가 검색창에 칠 문장으로, 답은 2~3문장으로 완결. 자동으로 FAQ 구조화 데이터가 생성됩니다 -->
+        <h2 id="faq">자주 묻는 질문</h2>
+        <div class="faq">
+          <details><summary>[질문 1]</summary><div class="a">[답 — 첫 문장에 결론]</div></details>
+          <details><summary>[질문 2]</summary><div class="a">[답]</div></details>
+          <details><summary>[질문 3]</summary><div class="a">[답]</div></details>
+        </div>
+
+        <!-- ⑫ 참고 자료: 공공기관·학회·논문·원내 진료안내 페이지. 근거가 있어야 AI 검색이 인용합니다 -->
+        <section class="references">
+          <h2>참고 자료</h2>
+          <ol>
+            <li>[출처 1 — 기관명, 문서명, 연도]</li>
+            <li>수원 바를정한의원 <a href="/pages/[관련 진료안내 페이지]">[페이지명]</a></li>
+          </ol>
+        </section>
+      </div>
+
+      <!-- ⑬ 글쓴이 박스: 그대로 두기 (E-E-A-T: 전문성·권위 신호) -->
+      <div class="author-box">
+        <img src="/assets/img/main/tit_logo.png" alt="수원 바를정한의원">
+        <div>
+          <h3>글쓴이 · 수원 바를정한의원</h3>
+          <p>한방 안이비인후피부과 전문의 오민지 원장, 한방내과 전문의 이진혁 · 김도경 원장, 한방소아청소년과 전문의 이주현 원장이 함께 진료합니다. <a href="/pages/about/doctor">의료진 소개 보기</a></p>
+        </div>
+      </div>
+
+      <!-- ⑭ 이전/다음 글 링크 -->
+      <div class="post-nav">
+        <a href="/pages/columns/[이전 글 파일명]"><span>이전 글</span>[이전 글 제목]</a>
+        <a href="/pages/columns/column" class="next"><span>목록</span>바를정 칼럼 전체 보기</a>
+      </div>
+
+      <div class="page-cta">
+        <h3>[행동 유도 문구]</h3>
+        <p>[한 줄 안내]</p>
+        <div class="btns">
+          <a href="https://m.booking.naver.com/booking/13/bizes/304582?theme=place&entry=pll&lang=ko&area=pll" target="_blank" rel="noopener" class="btn btn-primary">네이버 예약</a>
+          <a href="https://pf.kakao.com/_vAzCxd" target="_blank" rel="noopener" class="btn btn-accent">카카오톡 상담</a>
+          <a href="tel:0312173375" class="btn btn-outline-dark">031-217-3375</a>
+        </div>
+      </div>
+
+      <p class="disclaimer">본 게시글은 의학 정보 제공을 목적으로 하며 개별 진단이나 치료를 대체하지 않습니다. 치료 효과와 기간은 개인의 상태에 따라 다를 수 있습니다.</p>
+    </article>
+  </div>
+</div>
+
+<div id="site-footer-placeholder"></div>
+<script src="/assets/js/nav.js"></script>
+</body>
+</html>

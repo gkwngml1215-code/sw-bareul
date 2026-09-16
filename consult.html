@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>온라인 상담 · 빠른 상담신청 | 수원 바를정한의원</title>
+<meta name="description" content="수원 바를정한의원 온라인 상담. 구안와사·이명난청·교통사고·입원치료·기타질환 상담 항목을 선택해 카카오톡 채널로 바로 문의하거나 전화 031-217-3375로 상담받으세요.">
+<link rel="icon" type="image/png" href="/assets/img/main/tit_logo.png">
+<link rel="stylesheet" href="/assets/css/common.css">
+<link rel="stylesheet" href="/assets/css/page.css">
+<style>
+  .consult-form { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 34px 36px; }
+  .consult-form .row { display: grid; grid-template-columns: 130px 1fr; gap: 12px; align-items: start; padding: 12px 0; border-bottom: 1px dashed var(--line); }
+  .consult-form .row:last-of-type { border-bottom: 0; }
+  .consult-form label.t { font-weight: 700; color: var(--primary-dark); padding-top: 8px; }
+  .consult-form input[type=text], .consult-form input[type=tel], .consult-form textarea, .consult-form select { width: 100%; padding: 11px 12px; border: 1px solid #d8d6ce; border-radius: 8px; font-size: 15px; font-family: inherit; }
+  .consult-form textarea { min-height: 140px; resize: vertical; }
+  .consult-form .opts { display: flex; flex-wrap: wrap; gap: 8px; }
+  .consult-form .opts label { border: 1px solid var(--line); border-radius: 999px; padding: 8px 16px; cursor: pointer; font-size: 14.5px; }
+  .consult-form .opts input { margin-right: 6px; }
+  .consult-form .opts label:has(input:checked) { background: var(--primary); color: #fff; border-color: var(--primary); }
+  .consult-form .agree { font-size: 13.5px; color: var(--muted); }
+  .consult-form .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+  .consult-form .hint { font-size: 13px; color: var(--muted); margin-top: 10px; }
+  @media (max-width: 640px) { .consult-form { padding: 22px 18px; } .consult-form .row { grid-template-columns: 1fr; gap: 6px; } }
+</style>
+<!-- seo:start (tools/seo-inject.js 가 자동 생성, 직접 수정하지 마세요) -->
+<link rel="canonical" href="https://www.sw-bareul.co.kr/consult">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
+<meta name="keywords" content="수원 한의원 온라인 상담, 이명 상담, 구안와사 상담, 카카오톡 한의원 상담">
+<meta name="author" content="수원 바를정한의원">
+<meta name="geo.region" content="KR-41">
+<meta name="geo.placename" content="경기도 수원시 팔달구 인계동">
+<meta name="geo.position" content="37.2715501;127.0360048">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="수원 바를정한의원">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:url" content="https://www.sw-bareul.co.kr/consult">
+<meta property="og:title" content="온라인 상담 · 빠른 상담신청 | 수원 바를정한의원">
+<meta property="og:description" content="수원 바를정한의원 온라인 상담. 구안와사·이명난청·교통사고·입원치료·기타질환 상담 항목을 선택해 카카오톡 채널로 바로 문의하거나 전화 031-217-3375로 상담받으세요.">
+<meta property="og:image" content="https://www.sw-bareul.co.kr/assets/img/sub/ear01_con4_1.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="온라인 상담 · 빠른 상담신청 | 수원 바를정한의원">
+<meta name="twitter:description" content="수원 바를정한의원 온라인 상담. 구안와사·이명난청·교통사고·입원치료·기타질환 상담 항목을 선택해 카카오톡 채널로 바로 문의하거나 전화 031-217-3375로 상담받으세요.">
+<meta name="twitter:image" content="https://www.sw-bareul.co.kr/assets/img/sub/ear01_con4_1.jpg">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":["MedicalClinic","MedicalBusiness","LocalBusiness"],"@id":"https://www.sw-bareul.co.kr/#clinic","name":"수원 바를정한의원","alternateName":"바를정한의원","legalName":"바를정한의원","url":"https://www.sw-bareul.co.kr/","telephone":"+82-31-217-3375","image":"https://www.sw-bareul.co.kr/assets/img/main/mv1.jpg","logo":"https://www.sw-bareul.co.kr/assets/img/logo/logo.png","foundingDate":"2014-01-01","founder":{"@id":"https://www.sw-bareul.co.kr/#doctor"},"employee":[{"@id":"https://www.sw-bareul.co.kr/#doctor"},{"@id":"https://www.sw-bareul.co.kr/#doctor-oh"},{"@id":"https://www.sw-bareul.co.kr/#doctor-kim"},{"@id":"https://www.sw-bareul.co.kr/#doctor-lee"}],"medicalSpecialty":"한의학","availableService":[{"@type":"MedicalTherapy","name":"이명"},{"@type":"MedicalTherapy","name":"돌발성 난청"},{"@type":"MedicalTherapy","name":"메니에르 · 어지럼증 · 이석증"},{"@type":"MedicalTherapy","name":"구안와사 · 안면신경마비"},{"@type":"MedicalTherapy","name":"안검경련 · 안면경련"},{"@type":"MedicalTherapy","name":"삼차신경통"},{"@type":"MedicalTherapy","name":"눈 · 시야 질환"},{"@type":"MedicalTherapy","name":"신경 · 뇌 질환"},{"@type":"MedicalTherapy","name":"편평사마귀 레이저"},{"@type":"MedicalTherapy","name":"교통사고 후유증"},{"@type":"MedicalTherapy","name":"척추질환"},{"@type":"MedicalTherapy","name":"관절질환"},{"@type":"MedicalTherapy","name":"재활클리닉"},{"@type":"MedicalTherapy","name":"내과 · 소화기 질환"},{"@type":"MedicalTherapy","name":"항문 · 여성질환"},{"@type":"MedicalTherapy","name":"입원 집중치료"}],"address":{"@type":"PostalAddress","streetAddress":"권광로 274 (인계동, 태현빌딩) 1층","addressLocality":"수원시 팔달구","addressRegion":"경기도","postalCode":"16488","addressCountry":"KR"},"geo":{"@type":"GeoCoordinates","latitude":37.2715501,"longitude":127.0360048},"hasMap":"https://map.naver.com/p/entry/place/34778565","openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens":"10:00","closes":"20:00"},{"@type":"OpeningHoursSpecification","dayOfWeek":["Saturday"],"opens":"10:00","closes":"15:00"},{"@type":"OpeningHoursSpecification","dayOfWeek":["Sunday","PublicHolidays"],"opens":"10:00","closes":"15:00"}],"amenityFeature":[{"@type":"LocationFeatureSpecification","name":"1~2인실 입원실","value":true},{"@type":"LocationFeatureSpecification","name":"주차장","value":true}],"sameAs":["https://blog.naver.com/wuminzhi","https://map.naver.com/p/entry/place/34778565","https://pf.kakao.com/_vAzCxd","https://m.booking.naver.com/booking/13/bizes/304582?theme=place&entry=pll&lang=ko&area=pll","https://www.youtube.com/@jssljh","https://www.instagram.com/bareuljung.suwon","https://cafe.naver.com/nima32"],"areaServed":["수원시","경기도","전국"],"priceRange":"₩₩","currenciesAccepted":"KRW","paymentAccepted":"현금, 신용카드, 건강보험, 자동차보험, 실손보험","isAcceptingNewPatients":true},{"@type":["Physician","Person"],"@id":"https://www.sw-bareul.co.kr/#doctor","name":"이진혁","jobTitle":"한방내과 전문의 · 대표원장","url":"https://www.sw-bareul.co.kr/pages/about/doctor","image":"https://www.sw-bareul.co.kr/assets/img/sub/info02_con1_2.jpg","worksFor":{"@id":"https://www.sw-bareul.co.kr/#clinic"},"medicalSpecialty":"한의학"},{"@type":["Physician","Person"],"@id":"https://www.sw-bareul.co.kr/#doctor-oh","name":"오민지","jobTitle":"한방 안이비인후피부과 전문의 · 원장","url":"https://www.sw-bareul.co.kr/pages/about/doctor","image":"https://www.sw-bareul.co.kr/assets/img/sub/info02_con1_1.jpg","worksFor":{"@id":"https://www.sw-bareul.co.kr/#clinic"},"medicalSpecialty":"한의학"},{"@type":["Physician","Person"],"@id":"https://www.sw-bareul.co.kr/#doctor-kim","name":"김도경","jobTitle":"한방내과 전문의 · 원장","url":"https://www.sw-bareul.co.kr/pages/about/doctor","image":"https://www.sw-bareul.co.kr/assets/img/sub/info02_con1_3.jpg","worksFor":{"@id":"https://www.sw-bareul.co.kr/#clinic"},"medicalSpecialty":"한의학"},{"@type":["Physician","Person"],"@id":"https://www.sw-bareul.co.kr/#doctor-lee","name":"이주현","jobTitle":"한방소아청소년과 전문의 · 한의학 박사 · 원장","url":"https://www.sw-bareul.co.kr/pages/about/doctor","image":"https://www.sw-bareul.co.kr/assets/img/sub/info02_con1_4.jpg","worksFor":{"@id":"https://www.sw-bareul.co.kr/#clinic"},"medicalSpecialty":"한의학"},{"@type":"MedicalWebPage","@id":"https://www.sw-bareul.co.kr/consult#webpage","url":"https://www.sw-bareul.co.kr/consult","name":"온라인 상담 · 빠른 상담신청 | 수원 바를정한의원","description":"수원 바를정한의원 온라인 상담. 구안와사·이명난청·교통사고·입원치료·기타질환 상담 항목을 선택해 카카오톡 채널로 바로 문의하거나 전화 031-217-3375로 상담받으세요.","inLanguage":"ko-KR","isPartOf":{"@id":"https://www.sw-bareul.co.kr/#website"},"about":{"@id":"https://www.sw-bareul.co.kr/#clinic"},"primaryImageOfPage":"https://www.sw-bareul.co.kr/assets/img/sub/ear01_con4_1.jpg","dateModified":"2026-09-16","breadcrumb":{"@id":"https://www.sw-bareul.co.kr/consult#breadcrumb"},"audience":{"@type":"MedicalAudience","audienceType":"Patient"},"lastReviewed":"2026-09-16","reviewedBy":{"@id":"https://www.sw-bareul.co.kr/#doctor"},"speakable":{"@type":"SpeakableSpecification","cssSelector":["h1",".lead",".key-answer",".summary-box",".goal-box"]}},{"@type":"BreadcrumbList","@id":"https://www.sw-bareul.co.kr/consult#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"홈","item":"https://www.sw-bareul.co.kr/"},{"@type":"ListItem","position":2,"name":"상담 · 후기","item":"https://www.sw-bareul.co.kr/pages/columns/"},{"@type":"ListItem","position":3,"name":"온라인 상담","item":"https://www.sw-bareul.co.kr/consult"}]},{"@type":"FAQPage","@id":"https://www.sw-bareul.co.kr/consult#faq","mainEntity":[{"@type":"Question","name":"상담 신청 후 언제 연락이 오나요?","acceptedAnswer":{"@type":"Answer","text":"진료시간 내에는 보통 1시간 이내에 카카오톡 또는 전화로 답변드립니다. 진료 종료 후 접수된 문의는 다음 진료일 오전에 순서대로 연락드립니다."}},{"@type":"Question","name":"사진으로 상담이 되나요?","acceptedAnswer":{"@type":"Answer","text":"네. 카카오톡 채널에 정면 · 웃는 표정 · 눈 감은 사진(구안와사)이나 청력검사 결과지(이명 · 난청)를 보내주시면 담당 원장이 확인 후 내원 · 입원 여부를 안내해 드립니다."}},{"@type":"Question","name":"지방에서 가는데 당일 입원이 되나요?","acceptedAnswer":{"@type":"Answer","text":"가능합니다. 미리 전화 주시면 1인실을 우선 배정하고, 접수부터 검사 · 입원까지 한 번에 진행되도록 동선을 준비해 드립니다. 주말 · 공휴일에도 당일 입원이 가능합니다."}}]}]}</script>
+<!-- seo:end -->
+</head>
+<body>
+
+<div id="site-header-placeholder"></div>
+
+<section class="sub-hero" style="background-image:url('/assets/img/sub/ear01_con4_1.jpg')">
+  <div class="container">
+    <div class="breadcrumb"><a href="/">홈</a> &gt; <a href="/pages/columns/">상담 · 후기</a> &gt; 온라인 상담</div>
+    <h1>온라인 상담</h1>
+    <p class="lead">※ 신청하시면 빠른 시간 내 상담을 도와드립니다. 작성하신 내용은 카카오톡 채널 또는 전화로 이어집니다.</p>
+  </div>
+</section>
+
+<div class="page-body">
+  <div class="container">
+
+    <div class="page-section">
+      <h2>빠른 상담신청</h2>
+      <form class="consult-form" id="consultForm" onsubmit="return sendConsult(event)">
+        <div class="row">
+          <label class="t">상담 항목</label>
+          <div class="opts">
+            <label><input type="radio" name="topic" value="구안와사" checked>구안와사</label>
+            <label><input type="radio" name="topic" value="이명난청">이명난청</label>
+            <label><input type="radio" name="topic" value="어지럼증">어지럼증</label>
+            <label><input type="radio" name="topic" value="교통사고">교통사고</label>
+            <label><input type="radio" name="topic" value="입원치료">입원치료</label>
+            <label><input type="radio" name="topic" value="기타질환">기타질환</label>
+          </div>
+        </div>
+        <div class="row"><label class="t" for="c_name">성함</label><input type="text" id="c_name" placeholder="홍길동" required></div>
+        <div class="row"><label class="t" for="c_tel">연락처</label><input type="tel" id="c_tel" placeholder="010-0000-0000" required></div>
+        <div class="row"><label class="t" for="c_msg">증상 · 문의 내용</label><textarea id="c_msg" placeholder="언제부터 어떤 증상이 있는지, 다른 병원 진료 여부, 원하시는 내원 · 입원 시기를 적어 주세요."></textarea></div>
+        <div class="row"><span></span><label class="agree"><input type="checkbox" id="c_agree" required> <a href="/privacy" target="_blank" style="text-decoration:underline">개인정보처리방침</a> 내용에 동의합니다.</label></div>
+        <div class="actions">
+          <button type="submit" class="btn btn-kakao">카카오톡으로 상담 신청 ➜</button>
+          <button type="button" class="btn btn-primary" onclick="sendSms()">문자로 상담 신청</button>
+          <a href="tel:0312173375" data-site-href="tel" class="btn btn-outline-dark">전화 상담 <span data-site="phone">031-217-3375</span></a>
+        </div>
+        <p class="hint">카카오톡 버튼을 누르면 작성한 내용이 복사되고 바를정한의원 카카오톡 채널이 열립니다. 채팅창에 붙여넣기만 하시면 됩니다. 문자 버튼은 휴대폰에서 문자 앱으로 연결됩니다.</p>
+      </form>
+    </div>
+
+    <div class="page-section">
+      <h2>상담 채널 안내</h2>
+      <div class="card-grid">
+        <a href="https://pf.kakao.com/_vAzCxd" data-site-href="kakao" target="_blank" rel="noopener" class="card link">
+          <div class="c-icon"><img src="/assets/img/main/board_icon_1.png" alt=""></div>
+          <h4>카카오톡 채널</h4>
+          <p>진료시간 내 실시간 답변. 사진(얼굴 · 검사지) 상담이 가능해 구안와사 · 이명난청 상담에 가장 편리합니다.</p>
+          <span class="more">채널 열기 →</span>
+        </a>
+        <a href="https://m.booking.naver.com/booking/13/bizes/304582?theme=place&amp;entry=pll&amp;lang=ko&amp;area=pll" data-site-href="naverBooking" target="_blank" rel="noopener" class="card link">
+          <div class="c-icon"><img src="/assets/img/main/board_icon_2.png" alt=""></div>
+          <h4>네이버 예약 · 톡톡</h4>
+          <p>네이버에서 24시간 예약할 수 있고, 네이버 플레이스 톡톡으로 문의를 남기실 수 있습니다.</p>
+          <span class="more">네이버 예약 →</span>
+        </a>
+        <a href="tel:0312173375" data-site-href="tel" class="card link">
+          <div class="c-icon"><img src="/assets/img/main/board_icon_3.png" alt=""></div>
+          <h4>전화 상담</h4>
+          <p>평일 10:00~20:00, 토 · 일 · 공휴일 10:00~15:00. 입원 문의와 지방 환자 우선 예약은 전화가 가장 빠릅니다.</p>
+          <span class="more" data-site="phone">031-217-3375</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="page-section">
+      <h2>자주 묻는 질문</h2>
+      <div class="faq">
+        <details><summary>상담 신청 후 언제 연락이 오나요?</summary><div class="a">진료시간 내에는 보통 1시간 이내에 카카오톡 또는 전화로 답변드립니다. 진료 종료 후 접수된 문의는 다음 진료일 오전에 순서대로 연락드립니다.</div></details>
+        <details><summary>사진으로 상담이 되나요?</summary><div class="a">네. 카카오톡 채널에 정면 · 웃는 표정 · 눈 감은 사진(구안와사)이나 청력검사 결과지(이명 · 난청)를 보내주시면 담당 원장이 확인 후 내원 · 입원 여부를 안내해 드립니다.</div></details>
+        <details><summary>지방에서 가는데 당일 입원이 되나요?</summary><div class="a">가능합니다. 미리 전화 주시면 1인실을 우선 배정하고, 접수부터 검사 · 입원까지 한 번에 진행되도록 동선을 준비해 드립니다. 주말 · 공휴일에도 당일 입원이 가능합니다.</div></details>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="site-footer-placeholder"></div>
+<script src="/assets/js/nav.js"></script>
+<script>
+  function consultText() {
+    const topic = document.querySelector('input[name=topic]:checked').value;
+    const name = document.getElementById('c_name').value.trim();
+    const tel = document.getElementById('c_tel').value.trim();
+    const msg = document.getElementById('c_msg').value.trim();
+    return `[온라인 상담신청]\n상담항목: ${topic}\n성함: ${name}\n연락처: ${tel}\n내용: ${msg || '-'}`;
+  }
+  async function sendConsult(e) {
+    e.preventDefault();
+    if (!document.getElementById('c_agree').checked) { alert('개인정보처리방침에 동의해 주세요.'); return false; }
+    const text = consultText();
+    try { await navigator.clipboard.writeText(text); } catch (err) {}
+    alert('상담 내용이 복사되었습니다. 열리는 카카오톡 채팅창에 붙여넣기(길게 누르기 → 붙여넣기) 해 주세요.');
+    window.open('https://pf.kakao.com/_vAzCxd/chat', '_blank');
+    return false;
+  }
+  function sendSms() {
+    if (!document.getElementById('c_agree').checked) { alert('개인정보처리방침에 동의해 주세요.'); return; }
+    location.href = 'sms:0312173375?body=' + encodeURIComponent(consultText());
+  }
+</script>
+</body>
+</html>

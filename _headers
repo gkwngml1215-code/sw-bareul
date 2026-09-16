@@ -1,0 +1,18 @@
+# Cloudflare Pages 응답 헤더 설정 (dist/ 에 함께 복사됨)
+
+# 어드민(별도 프로젝트)이 배포 완료를 확인할 때 읽는 파일 — 다른 주소에서 읽을 수 있게, 캐시 금지
+/build-info.json
+  Access-Control-Allow-Origin: *
+  Cache-Control: no-store
+
+# 칼럼 원고 등은 공개하지 않음 (빌드에서 이미 제외되지만 이중 안전장치)
+/pages/columns/_data/*
+  X-Robots-Tag: noindex
+
+# 이미지·CSS·JS 는 일주일 캐시 (파일이 바뀌면 배포 시 새로 내려감)
+/assets/*
+  Cache-Control: public, max-age=604800
+
+# 헤더·푸터 조각 파일은 검색 제외
+/components/*
+  X-Robots-Tag: noindex

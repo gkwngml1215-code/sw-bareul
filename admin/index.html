@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>바를정한의원 어드민 · 게시글 관리</title>
+<link rel="icon" type="image/png" href="logo/symbol.png">
+<style>
+  :root { --p:#1a3369; --pd:#0f2148; --acc:#be9971; --line:#e6e0d6; --bg:#f4f4f6; --text:#2b2b2b; --muted:#6b6b6b; --danger:#c0392b; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif; background:var(--bg); color:var(--text); font-size:14px; }
+  a { color:inherit; text-decoration:none; }
+  button { font-family:inherit; cursor:pointer; }
+  .hidden { display:none !important; }
+
+  /* 로그인 */
+  #login { min-height:100vh; display:flex; align-items:center; justify-content:center; }
+  #login form { background:#fff; padding:40px 44px; border-radius:16px; box-shadow:0 10px 40px rgba(0,0,0,.08); width:360px; text-align:center; }
+  #login img { height:44px; margin-bottom:18px; }
+  #login h1 { font-size:18px; margin:0 0 20px; }
+  #login input { width:100%; padding:12px 14px; border:1px solid var(--line); border-radius:8px; font-size:15px; margin-bottom:12px; }
+  #login button { width:100%; padding:12px; background:var(--p); color:#fff; border:0; border-radius:8px; font-size:15px; font-weight:700; }
+  #login .err { color:var(--danger); font-size:13px; min-height:18px; margin-top:8px; }
+
+  /* 레이아웃 */
+  #app { display:grid; grid-template-columns:230px 1fr; min-height:100vh; }
+  aside { background:#101a33; color:#cfd8d3; padding:24px 0; position:sticky; top:0; height:100vh; }
+  aside .brand { padding:0 22px 20px; border-bottom:1px solid rgba(255,255,255,.1); margin-bottom:14px; }
+  aside .brand img { height:36px; background:#fff; padding:5px 10px; border-radius:6px; }
+  aside .brand small { display:block; margin-top:8px; font-size:12px; color:#90a099; }
+  aside nav a, aside nav button { display:block; width:100%; text-align:left; padding:12px 22px; color:#cfd8d3; background:none; border:0; font-size:14.5px; }
+  aside nav a:hover, aside nav button:hover, aside nav a.active { background:rgba(255,255,255,.08); color:#fff; }
+  aside nav a.active { border-left:3px solid var(--acc); }
+  main { padding:28px 36px 60px; max-width:1180px; }
+  .topbar { display:flex; align-items:center; justify-content:space-between; margin-bottom:22px; gap:12px; flex-wrap:wrap; }
+  .topbar h1 { font-size:22px; margin:0; }
+  .btn { display:inline-flex; align-items:center; gap:6px; padding:10px 18px; border-radius:8px; border:1px solid var(--line); background:#fff; font-size:14px; font-weight:600; }
+  .btn.primary { background:var(--p); color:#fff; border-color:var(--p); }
+  .btn.primary:hover { background:var(--pd); }
+  .btn.ghost { background:transparent; }
+  .btn.danger { color:var(--danger); border-color:#f0c9c4; }
+  .btn.small { padding:6px 12px; font-size:13px; }
+  .btn:disabled { opacity:.5; cursor:default; }
+
+  /* 목록 */
+  .table { width:100%; border-collapse:collapse; background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 2px 10px rgba(0,0,0,.04); }
+  .table th, .table td { padding:12px 14px; border-bottom:1px solid var(--line); text-align:left; vertical-align:middle; }
+  .table th { background:#f7f6f2; font-size:13px; color:var(--muted); font-weight:700; }
+  .table td.thumb img { width:84px; height:52px; object-fit:cover; border-radius:6px; display:block; background:#eee; }
+  .table td.title a { font-weight:700; font-size:15px; }
+  .table td.title small { display:block; color:var(--muted); font-weight:400; margin-top:3px; }
+  .status { display:inline-block; padding:3px 10px; border-radius:999px; font-size:12px; font-weight:700; }
+  .status.published { background:#e8f0ec; color:var(--p); }
+  .status.draft { background:#fff3cd; color:#8a6d1a; }
+  .table .actions { white-space:nowrap; }
+  .table .actions a, .table .actions button { margin-right:6px; }
+  .empty { padding:60px; text-align:center; color:var(--muted); background:#fff; border-radius:12px; }
+
+  /* 폼 (첨부 이미지와 같은 레이아웃: 왼쪽 라벨, 오른쪽 입력) */
+  .form { background:#fff; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,.04); }
+  .row { display:grid; grid-template-columns:150px 1fr; border-bottom:1px solid var(--line); }
+  .row:last-child { border-bottom:0; }
+  .row > label { padding:22px 20px; font-weight:700; font-size:13.5px; color:#333; }
+  .row > label small { display:block; font-weight:400; color:var(--muted); font-size:12px; margin-top:4px; line-height:1.4; }
+  .row > label .req { color:var(--danger); }
+  .row > .field { padding:14px 20px 14px 0; }
+  .field input[type=text], .field input[type=date], .field select, .field textarea { width:100%; padding:10px 12px; border:1px solid #d8d6ce; border-radius:6px; font-size:14px; font-family:inherit; background:#fff; }
+  .field textarea { min-height:120px; resize:vertical; line-height:1.6; }
+  .field textarea.tall { min-height:180px; }
+  .field .hint { font-size:12px; color:var(--muted); margin-top:6px; display:flex; justify-content:space-between; }
+  .field .hint .over { color:var(--danger); font-weight:700; }
+  .inline { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+  .inline > * { flex:1; }
+  .inline > .fixed { flex:0 0 auto; }
+
+  /* 에디터 */
+  .editor { border:1px solid #d8d6ce; border-radius:6px; overflow:hidden; }
+  .toolbar { display:flex; flex-wrap:wrap; gap:2px; padding:6px 8px; border-bottom:1px solid var(--line); background:#fafaf8; align-items:center; }
+  .toolbar button, .toolbar select { height:30px; min-width:30px; padding:0 7px; border:1px solid transparent; background:transparent; border-radius:4px; font-size:13px; color:#333; }
+  .toolbar button:hover, .toolbar select:hover { background:#eceae3; border-color:#ddd; }
+  .toolbar .sep { width:1px; height:20px; background:#ddd; margin:0 5px; }
+  .toolbar select { border:1px solid #ddd; background:#fff; width:auto !important; min-width:110px; }
+  #content table { border-collapse:collapse; width:100%; margin:12px 0; font-size:14px; }
+  #content th, #content td { border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top; }
+  #content th { background:#f6f3ec; color:var(--pd); }
+  .toolbar button b { font-weight:900; } .toolbar button i { font-style:italic; } .toolbar button u { text-decoration:underline; } .toolbar button s { text-decoration:line-through; }
+  .toolbar input[type=color] { width:30px; height:30px; border:0; padding:0; background:none; cursor:pointer; }
+  .toolbar .special { color:var(--p); font-weight:700; }
+  #content { min-height:420px; padding:18px 20px; outline:none; font-size:15.5px; line-height:1.8; overflow:auto; max-height:70vh; }
+  #content:empty::before { content:attr(data-placeholder); color:#aaa; }
+  #content h2 { font-size:21px; margin:26px 0 10px; color:var(--pd); border-bottom:2px solid #e8f0ec; padding-bottom:6px; }
+  #content h3 { font-size:17px; margin:20px 0 8px; color:var(--pd); }
+  #content p { margin:0 0 12px; }
+  #content img { max-width:100%; height:auto; border-radius:8px; display:block; margin:10px 0; }
+  #content blockquote { margin:16px 0; padding:12px 18px; background:#f6f3ec; border-left:4px solid var(--acc); border-radius:0 8px 8px 0; }
+  #content .key-answer { border:2px solid var(--p); border-radius:8px; padding:12px 16px; margin:12px 0; background:#fff; }
+  #content .key-answer::before { content:"정답 박스"; display:block; font-size:11px; color:var(--p); font-weight:700; letter-spacing:.06em; margin-bottom:4px; }
+  #content ul.check-list { list-style:none; padding:0; }
+  #content ul.check-list li { padding:8px 12px 8px 32px; border:1px solid var(--line); border-radius:8px; margin-bottom:6px; position:relative; }
+  #content ul.check-list li::before { content:"✓"; position:absolute; left:10px; color:var(--p); font-weight:900; }
+  #content ul:not(.check-list), #content ol { padding-left:24px; }
+  .editor-foot { display:flex; justify-content:space-between; padding:6px 12px; font-size:12px; color:var(--muted); border-top:1px solid var(--line); background:#fafaf8; }
+
+  /* 썸네일 */
+  .thumb-box { display:flex; gap:16px; align-items:flex-start; }
+  .thumb-box img { width:200px; aspect-ratio:16/9; object-fit:cover; border-radius:8px; border:1px solid var(--line); background:#f3f3f3; display:block; }
+  .thumb-box .no { width:200px; aspect-ratio:16/9; border:1px dashed #ccc; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#aaa; font-size:12px; }
+  .file-btn { display:inline-block; padding:7px 12px; border:1px solid #bbb; border-radius:4px; background:#f6f6f6; font-size:13px; cursor:pointer; }
+  .file-btn input { display:none; }
+  .thumb-lib { margin-top:10px; font-size:12px; color:var(--muted); }
+  .thumb-lib select { width:auto; padding:6px 8px; font-size:12px; }
+
+  /* SEO 추가 항목 */
+  details.extra { background:#fff; border-radius:12px; margin-top:18px; box-shadow:0 2px 10px rgba(0,0,0,.04); }
+  details.extra summary { padding:18px 20px; font-weight:700; cursor:pointer; font-size:15px; list-style:none; display:flex; justify-content:space-between; align-items:center; }
+  details.extra summary::-webkit-details-marker { display:none; }
+  details.extra summary small { font-weight:400; color:var(--muted); font-size:12.5px; }
+  details.extra summary::after { content:"+"; font-size:20px; color:var(--muted); }
+  details.extra[open] summary::after { content:"−"; }
+  details.extra .form { box-shadow:none; border-top:1px solid var(--line); border-radius:0 0 12px 12px; }
+  .faq-rows { display:grid; gap:8px; }
+  .faq-row { display:grid; grid-template-columns:1fr 2fr auto; gap:8px; align-items:start; }
+  .faq-row textarea { min-height:44px; }
+  .faq-row button { height:38px; }
+
+  /* 하단 액션바 */
+  .actionbar { position:sticky; bottom:0; background:rgba(244,245,243,.95); backdrop-filter:blur(6px); padding:14px 0; margin-top:20px; display:flex; gap:10px; align-items:center; border-top:1px solid var(--line); }
+  .actionbar .spacer { flex:1; }
+  .actionbar .msg { font-size:13px; color:var(--muted); }
+  .toast { position:fixed; right:24px; bottom:24px; background:#101a33; color:#fff; padding:12px 18px; border-radius:10px; font-size:14px; box-shadow:0 8px 24px rgba(0,0,0,.2); z-index:99; opacity:0; transform:translateY(10px); transition:all .25s; pointer-events:none; }
+  .toast.show { opacity:1; transform:none; }
+  .toast.err { background:var(--danger); }
+
+  /* GitHub 접속 키 (메뉴 맨 아래) */
+  .keybox { margin: 18px 16px 0; padding: 14px 12px; border-top: 1px solid rgba(255,255,255,.12); font-size: 12.5px; color: #cfd8d3; }
+  .keybox .kb-title { font-weight: 700; margin-bottom: 6px; color: #fff; }
+  .keybox .kb-status { margin-bottom: 8px; color: #90a099; }
+  .keybox .kb-status.ok { color: #9ad3b5; }
+  .keybox .kb-status.bad { color: #f2a59d; }
+  .keybox input { width: 100%; padding: 8px 10px; border: 1px solid rgba(255,255,255,.2); border-radius: 6px; background: rgba(255,255,255,.06); color: #fff; font-size: 12.5px; margin-bottom: 6px; }
+  .keybox input::placeholder { color: #7f8f88; }
+  .keybox .kb-btns { display: flex; gap: 6px; }
+  .keybox .kb-btns button { flex: 1; padding: 7px 0; border-radius: 6px; border: 1px solid rgba(255,255,255,.2); background: rgba(255,255,255,.08); color: #fff; font-size: 12.5px; }
+  .keybox .kb-btns button.primary { background: var(--p); border-color: var(--p); }
+  .keybox .kb-help { margin-top: 8px; color: #90a099; line-height: 1.5; }
+
+  @media (max-width: 900px) {
+    #app { grid-template-columns:1fr; } aside { position:static; height:auto; } main { padding:20px 16px; }
+    .row { grid-template-columns:1fr; } .row > label { padding:14px 16px 4px; } .row > .field { padding:0 16px 14px; }
+    .faq-row { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 로그인 -->
+<div id="login">
+  <form onsubmit="login(event)">
+    <img src="logo/logo-horizontal.png" alt="바를정한의원">
+    <h1>홈페이지 관리자</h1>
+    <input type="password" id="pw" placeholder="비밀번호" autofocus autocomplete="current-password">
+    <label id="rememberRow" class="hidden" style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);margin:0 0 12px;text-align:left"><input type="checkbox" id="remember" checked style="width:auto;margin:0"> 이 컴퓨터에서 로그인 유지</label>
+    <button type="submit">로그인</button>
+    <div class="err" id="loginErr"></div>
+    <p id="loginHelp" class="hidden" style="font-size:12px;color:var(--muted);line-height:1.6;margin:14px 0 0">접속 키는 GitHub 계정에서 발급합니다.<br>발급 방법은 <b>배포가이드.md</b> 5번 항목을 보세요.</p>
+  </form>
+</div>
+
+<!-- 앱 -->
+<div id="app" class="hidden">
+  <aside>
+    <div class="brand"><img src="logo/logo-horizontal.png" alt="바를정한의원"><small>홈페이지 관리자</small></div>
+    <nav>
+      <a href="#list" id="navList" class="active">📋 게시글 목록</a>
+      <a href="#new" id="navNew">✏️ 새 글 쓰기</a>
+      <a href="#site" id="navSite">🏥 홈페이지 설정</a>
+      <a href="/pages/columns/" id="navSiteColumns" target="_blank">🌐 홈페이지 상담·후기 보기</a>
+      <a href="/" id="navSiteHome" target="_blank">🏠 홈페이지 메인</a>
+      <button onclick="rebuild()" id="btnRebuild">🔄 전체 다시 생성 (SEO 갱신)</button>
+      <button onclick="logout()" id="btnLogout">🚪 로그아웃</button>
+    </nav>
+    <div class="keybox hidden" id="ghKeyBox">
+      <div class="kb-title">🔑 GitHub 접속 키</div>
+      <div class="kb-status" id="kbStatus">미연결</div>
+      <input type="password" id="kbInput" placeholder="github_pat_… 붙여넣기" autocomplete="off">
+      <div class="kb-btns"><button type="button" class="primary" onclick="saveKey()">저장</button><button type="button" onclick="clearKey()">해제</button></div>
+      <div class="kb-help">GitHub → Settings → Developer settings → Fine-grained tokens 에서 발급 (배포가이드 5단계)</div>
+    </div>
+  </aside>
+
+  <main>
+    <!-- 목록 -->
+    <section id="viewList">
+      <div class="topbar">
+        <h1>게시글 목록 <small style="font-size:13px;color:var(--muted);font-weight:400">바를정 칼럼 · 치료 전후 사례 · 환자수기 · 언론보도 · 공지사항</small></h1>
+        <a href="#new" class="btn primary">+ 새 글 쓰기</a>
+      </div>
+      <div id="listBody"></div>
+    </section>
+
+    <!-- 작성/수정 폼 -->
+    <section id="viewForm" class="hidden">
+      <div class="topbar">
+        <h1 id="formTitle">새 글 쓰기</h1>
+        <div><a href="#list" class="btn ghost">← 목록으로</a></div>
+      </div>
+
+      <div class="form">
+        <div class="row">
+          <label>제목 <span class="req">*</span><small>핵심 키워드를 앞에. 질문형이면 더 좋음</small></label>
+          <div class="field"><input type="text" id="f_title" placeholder="예) 돌발성 난청, 골든타임 72시간과 2주의 의미" oninput="count('f_title','c_title',60)"><div class="hint"><span>검색 결과 제목으로 나갑니다</span><span id="c_title">0 / 60</span></div></div>
+        </div>
+        <div class="row">
+          <label>작성자</label>
+          <div class="field"><input type="text" id="f_author" value="수원 바를정한의원"></div>
+        </div>
+        <div class="row">
+          <label>카테고리 <span class="req">*</span><small>바를정 칼럼 · 치료 전후 사례 · 환자수기 · 언론보도 · 공지사항 중 선택. 선택한 게시판 목록에 자동으로 들어갑니다</small></label>
+          <div class="field"><select id="f_category"><option value="">카테고리</option></select></div>
+        </div>
+        <div class="row">
+          <label>description <span class="req">*</span><small>검색 결과 요약문. 첫 문장에 결론</small></label>
+          <div class="field"><input type="text" id="f_description" placeholder="예) 돌발성 난청은 발병 후 2주 이내 치료 시작이 중요합니다. …을 바를정한의원 의료진이 설명합니다." oninput="count('f_description','c_desc',150)"><div class="hint"><span>120~150자 권장</span><span id="c_desc">0 / 150</span></div></div>
+        </div>
+        <div class="row">
+          <label>keywords<small>쉼표로 구분, 3~5개</small></label>
+          <div class="field"><input type="text" id="f_keywords" placeholder="예) 수원 돌발성난청, 돌발성난청 골든타임, 이명 한방치료"></div>
+        </div>
+        <div class="row">
+          <label>schema<small>선택. 추가 JSON-LD가 있을 때만. 기본 구조화 데이터(글·FAQ·병원·경로)는 자동 생성됨</small></label>
+          <div class="field"><textarea id="f_schema" class="tall" placeholder='{"@context":"https://schema.org", ...}  — 비워두면 자동 생성만 적용'></textarea></div>
+        </div>
+        <div class="row">
+          <label>내용 <span class="req">*</span><small>소제목(H2)은 환자가 검색창에 칠 문장으로. 소제목 바로 아래 "정답 박스"로 한 문장 결론</small></label>
+          <div class="field">
+            <div class="editor">
+              <div class="toolbar">
+                <button type="button" title="실행 취소" onclick="cmd('undo')">↶</button>
+                <button type="button" title="다시 실행" onclick="cmd('redo')">↷</button>
+                <span class="sep"></span>
+                <select onchange="block(this.value); this.value='';" title="문단 형식">
+                  <option value="">본문</option>
+                  <option value="h2">소제목 H2</option>
+                  <option value="h3">소제목 H3</option>
+                  <option value="p">본문 문단</option>
+                  <option value="blockquote">인용문</option>
+                </select>
+                <span class="sep"></span>
+                <button type="button" onclick="cmd('bold')" title="굵게"><b>B</b></button>
+                <button type="button" onclick="cmd('italic')" title="기울임"><i>I</i></button>
+                <button type="button" onclick="cmd('underline')" title="밑줄"><u>U</u></button>
+                <button type="button" onclick="cmd('strikeThrough')" title="취소선"><s>S</s></button>
+                <input type="color" title="글자색" value="#1a3369" onchange="cmd('foreColor', this.value)">
+                <button type="button" onclick="cmd('hiliteColor','#fff3b0')" title="형광펜">🖍</button>
+                <span class="sep"></span>
+                <button type="button" onclick="cmd('justifyLeft')" title="왼쪽 정렬">≡</button>
+                <button type="button" onclick="cmd('justifyCenter')" title="가운데 정렬">☰</button>
+                <button type="button" onclick="cmd('insertUnorderedList')" title="글머리 기호">•≡</button>
+                <button type="button" onclick="cmd('insertOrderedList')" title="번호 목록">1≡</button>
+                <button type="button" onclick="link()" title="링크">🔗</button>
+                <span class="sep"></span>
+                <label class="file-btn" title="이미지 삽입" style="padding:4px 8px">🖼 이미지<input type="file" accept="image/*" onchange="insertImage(this)"></label>
+                <span class="sep"></span>
+                <button type="button" class="special" onclick="keyAnswer()" title="선택한 문단을 정답 박스로">▣ 정답 박스</button>
+                <button type="button" class="special" onclick="checkList()" title="체크리스트">✓ 체크리스트</button>
+                <button type="button" onclick="cmd('removeFormat')" title="서식 지우기">Tx</button>
+              </div>
+              <div id="content" contenteditable="true" data-placeholder="여기에 본문을 작성하세요. 블로그 글을 붙여넣어도 됩니다. (붙여넣기 시 서식은 정리됩니다)" oninput="editorStat()"></div>
+              <div class="editor-foot"><span>H2 소제목은 자동으로 목차가 됩니다</span><span id="stat">0자 · 소제목 0개</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label>썸네일<small>목록 카드와 글 상단 대표 이미지. 가로형(16:9) 권장</small></label>
+          <div class="field">
+            <div class="thumb-box">
+              <div id="thumbPreview"><div class="no">미리보기</div></div>
+              <div>
+                <label class="file-btn">파일 선택<input type="file" accept="image/*" onchange="pickThumb(this)"></label>
+                <span id="thumbName" style="font-size:12px;color:var(--muted);margin-left:8px">선택된 파일 없음</span>
+                <div class="thumb-lib">또는 사이트에 있는 사진 사용:
+                  <select id="thumbLib" onchange="useLib(this.value)">
+                    <option value="">선택</option>
+                    <option value="/assets/img/sub/ear01_con3_1.jpg">MTM 이명도 검사</option>
+                    <option value="/assets/img/sub/ear01_con3_2.jpg">미세청력검사(AMA-PTA)</option>
+                    <option value="/assets/img/sub/ear01_con4_1.jpg">의료진 문진 상담</option>
+                    <option value="/assets/img/sub/ear01_con4_3.jpg">소리재활 · 침 치료</option>
+                    <option value="/assets/img/sub/face01_01.jpg">구안와사 진료</option>
+                    <option value="/assets/img/sub/face01_con3_1.jpg">안면 진찰</option>
+                    <option value="/assets/img/sub/face01_con5_1.jpg">프리미엄 입원실</option>
+                    <option value="/assets/img/sub/face01_con6_1.jpg">양·한방 협진</option>
+                    <option value="/assets/img/sub/disease04_con1_1.jpg">척추질환 치료</option>
+                    <option value="/assets/img/sub/disease07_con1_1.jpg">내과·소화기 진료</option>
+                    <option value="/assets/img/sub/disease07_con6_1.jpg">원내 탕전실</option>
+                    <option value="/assets/img/sub/look_01.jpg">원내 시설</option>
+                    <option value="/assets/img/sub/info02_con1_1.jpg">오민지 원장</option>
+                    <option value="/assets/img/sub/info02_con1_2.jpg">이진혁 원장</option>
+                    <option value="/assets/img/main/mv1.jpg">메인 비주얼</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label>썸네일 alt값<small>사진 내용을 문장으로 (이미지 검색·접근성)</small></label>
+          <div class="field"><input type="text" id="f_thumbAlt" placeholder="예) 수원 바를정한의원 미세청력검사 모습"></div>
+        </div>
+      </div>
+
+      <details class="extra" open>
+        <summary>AI 검색 최적화 항목 (GEO · AEO) <small>핵심 요약 · FAQ · 참고 자료 — 채우면 AI 답변과 검색 스니펫에 잘 잡힙니다</small></summary>
+        <div class="form">
+          <div class="row">
+            <label>핵심 요약<small>한 줄에 하나씩, 3~4개. 숫자·기간·횟수처럼 구체적으로</small></label>
+            <div class="field"><textarea id="f_summary" placeholder="돌발성 난청은 발병 후 72시간 이내 치료 시작이 가장 유리합니다.&#10;2주가 지났어도 치료를 포기해서는 안 됩니다.&#10;바를정한의원은 1~2인실 입원 집중치료로 하루 2회 이상 치료합니다."></textarea></div>
+          </div>
+          <div class="row">
+            <label>자주 묻는 질문<small>3~5개. 질문은 실제 검색 문장, 답은 결론부터 2~3문장. FAQ 구조화 데이터가 자동 생성됩니다</small></label>
+            <div class="field">
+              <div class="faq-rows" id="faqRows"></div>
+              <button type="button" class="btn small" style="margin-top:8px" onclick="addFaq()">+ 질문 추가</button>
+            </div>
+          </div>
+          <div class="row">
+            <label>참고 자료<small>한 줄에 하나. 기관·학회·논문·원내 페이지. 링크는 &lt;a href="..."&gt;텍스트&lt;/a&gt; 형태로 넣을 수 있음</small></label>
+            <div class="field"><textarea id="f_references" placeholder="미국이비인후과학회(AAO-HNS), 돌발성 난청 진료지침 (2019)&#10;수원 바를정한의원 <a href=&quot;/pages/ear/hearing-loss&quot;>돌발성 난청 진료안내</a>"></textarea></div>
+          </div>
+        </div>
+      </details>
+
+      <details class="extra">
+        <summary>발행 설정 <small>주소(슬러그) · 발행일 · 짧은 제목</small></summary>
+        <div class="form">
+          <div class="row">
+            <label>글 주소 (슬러그)<small>영문 소문자·숫자·하이픈. 비우면 자동 생성. 공개 후 바꾸면 주소가 바뀝니다</small></label>
+            <div class="field"><div class="inline"><span class="fixed" style="color:var(--muted)">/pages/columns/</span><input type="text" id="f_slug" placeholder="2026-10-01-sudden-hearing-loss-golden-time"></div></div>
+          </div>
+          <div class="row">
+            <label>발행일</label>
+            <div class="field"><div class="inline"><input type="date" id="f_published"><span class="fixed" style="color:var(--muted)">수정일은 저장할 때 오늘 날짜로 자동 기록</span></div></div>
+          </div>
+          <div class="row">
+            <label>짧은 제목<small>경로 표시(홈 &gt; 원장칼럼 &gt; …)에 쓰는 20자 내외 제목</small></label>
+            <div class="field"><input type="text" id="f_shortTitle" placeholder="비우면 제목 앞부분을 사용"></div>
+          </div>
+        </div>
+      </details>
+
+      <div class="actionbar">
+        <button class="btn primary" onclick="save('published')">저장하고 공개</button>
+        <button class="btn" onclick="save('draft')">임시저장 (비공개)</button>
+        <button class="btn" id="btnPreview" onclick="preview()" disabled>미리보기</button>
+        <span class="spacer"></span>
+        <span class="msg" id="saveMsg"></span>
+        <button class="btn danger" id="btnDelete" onclick="del()" class="hidden">삭제</button>
+      </div>
+    </section>
+
+    <!-- 홈페이지 설정 -->
+    <section id="viewSite" class="hidden">
+      <div class="topbar">
+        <h1>홈페이지 설정</h1>
+        <span class="msg" id="siteMsg" style="font-size:13px;color:var(--muted)"></span>
+      </div>
+      <p style="margin:0 0 16px;color:var(--muted);font-size:13.5px">여기서 고친 값은 홈페이지의 상단·하단·예약 페이지·오시는 길·검색 정보에 한꺼번에 반영됩니다. 저장 후 1~2분 뒤 홈페이지에서 확인하세요.</p>
+
+      <details class="extra" open><summary>기본 정보 <small>병원명 · 원장 · 전화 · 주소</small></summary><div class="form">
+        <div class="row">
+          <label>병원명</label>
+          <div class="field"><input type="text" id="s_name" placeholder=""></div>
+        </div>
+        <div class="row">
+          <label>대표원장<small>이름만</small></label>
+          <div class="field"><input type="text" id="s_doctor" placeholder=""></div>
+        </div>
+        <div class="row">
+          <label>대표전화<small>하이픈 포함</small></label>
+          <div class="field"><input type="text" id="s_phone" placeholder="031-217-3375"></div>
+        </div>
+        <div class="row">
+          <label>이메일</label>
+          <div class="field"><input type="text" id="s_email" placeholder=""></div>
+        </div>
+        <div class="row">
+          <label>사업자등록번호</label>
+          <div class="field"><input type="text" id="s_bizNo" placeholder=""></div>
+        </div>
+        <div class="row">
+          <label>주소<small>시/도 · 구/군 · 도로명 상세</small></label>
+          <div class="field"><div class="inline"><input type="text" id="s_region" placeholder="경기도"><input type="text" id="s_city" placeholder="수원시 팔달구"><input type="text" id="s_street" placeholder="권광로 274 (인계동, 태현빌딩) 1층" style="flex:2"></div></div>
+        </div>
+        <div class="row">
+          <label>짧은 주소<small>메인 화면 카드에 쓰는 한 줄</small></label>
+          <div class="field"><input type="text" id="s_addressShort" placeholder="수원 팔달구 권광로 274 태현빌딩 1층"></div>
+        </div>
+        <div class="row">
+          <label>주변 안내<small>근처 랜드마크</small></label>
+          <div class="field"><input type="text" id="s_landmark" placeholder="분당선 수원시청역 9번 출구"></div>
+        </div>
+        <div class="row">
+          <label>주차 안내</label>
+          <div class="field"><input type="text" id="s_parking" placeholder="외래건물 지하 1층 주차 (주차등록 시 2시간 무료)"></div>
+        </div>
+        <div class="row">
+          <label>입원실 1병동<small>하단 · 오시는 길에 표시</small></label>
+          <div class="field"><input type="text" id="s_ward1" placeholder="1병동 : 수원시 팔달구 권광로 270 (인계동) 형석빌딩 3층"></div>
+        </div>
+        <div class="row">
+          <label>입원실 2병동</label>
+          <div class="field"><input type="text" id="s_ward2" placeholder="2병동 : 수원시 팔달구 권광로 274 (인계동) 태현빌딩 3층"></div>
+        </div>
+      </div></details>
+
+      <details class="extra" open><summary>진료시간 <small>표·하단·검색 정보에 모두 반영</small></summary><div class="form">
+        <div class="row">
+          <label>월 ~ 금</label>
+          <div class="field"><div class="inline"><input type="time" id="s_weekdayOpen" style="width:auto"><span class="fixed">~</span><input type="time" id="s_weekdayClose" style="width:auto"></div></div>
+        </div>
+        <div class="row">
+          <label>일요일 · 공휴일<small>비고는 괄호 안에 표시</small></label>
+          <div class="field"><div class="inline"><input type="time" id="s_sunOpen" style="width:auto"><span class="fixed">~</span><input type="time" id="s_sunClose" style="width:auto"><input type="text" id="s_sunNote" placeholder="일요일 · 공휴일도 진료"></div></div>
+        </div>
+        <div class="row">
+          <label>토요일</label>
+          <div class="field"><div class="inline"><input type="time" id="s_satOpen" style="width:auto"><span class="fixed">~</span><input type="time" id="s_satClose" style="width:auto"><input type="text" id="s_satNote" placeholder="점심시간 없이 진료"></div></div>
+        </div>
+        <div class="row">
+          <label>점심시간<small>평일 기준</small></label>
+          <div class="field"><div class="inline"><input type="time" id="s_lunchStart" style="width:auto"><span class="fixed">~</span><input type="time" id="s_lunchEnd" style="width:auto"></div></div>
+        </div>
+        <div class="row">
+          <label>휴진 안내<small>표 맨 아래 줄</small></label>
+          <div class="field"><input type="text" id="s_closedText" placeholder="연중무휴 · 입원실 365일 운영"></div>
+        </div>
+        <div class="row">
+          <label>안내 문구<small>진료시간 표 아래 한 줄. 강조는 &lt;strong&gt;…&lt;/strong&gt;</small></label>
+          <div class="field"><textarea id="s_note" style="min-height:70px"></textarea></div>
+        </div>
+      </div></details>
+
+      <details class="extra" open><summary>예약 · 채널 링크 <small>버튼과 하단 링크</small></summary><div class="form">
+        <div class="row">
+          <label>네이버 예약</label>
+          <div class="field"><input type="text" id="s_naverBooking" placeholder="https://m.booking.naver.com/…"></div>
+        </div>
+        <div class="row">
+          <label>카카오톡 채널</label>
+          <div class="field"><input type="text" id="s_kakao" placeholder="https://pf.kakao.com/…"></div>
+        </div>
+        <div class="row">
+          <label>네이버 블로그</label>
+          <div class="field"><input type="text" id="s_blog" placeholder=""></div>
+        </div>
+        <div class="row">
+          <label>네이버 플레이스(지도)</label>
+          <div class="field"><input type="text" id="s_naverMap" placeholder=""></div>
+        </div>
+        <div class="row">
+          <label>카카오 지도</label>
+          <div class="field"><input type="text" id="s_kakaoMap" placeholder="https://kko.kakao.com/…"></div>
+        </div>
+        <div class="row">
+          <label>유튜브 채널</label>
+          <div class="field"><input type="text" id="s_youtube" placeholder="https://www.youtube.com/@…"></div>
+        </div>
+        <div class="row">
+          <label>인스타그램</label>
+          <div class="field"><input type="text" id="s_instagram" placeholder=""></div>
+        </div>
+        <div class="row">
+          <label>네이버 카페</label>
+          <div class="field"><input type="text" id="s_cafe" placeholder=""></div>
+        </div>
+      </div></details>
+
+      <details class="extra" open><summary>검색 설정 <small>메인 페이지 제목·설명, 소유확인 코드</small></summary><div class="form">
+        <div class="row">
+          <label>메인 제목<small>검색 결과에 나오는 제목 (60자 내외)</small></label>
+          <div class="field"><input type="text" id="s_homeTitle" placeholder=""></div>
+        </div>
+        <div class="row">
+          <label>메인 설명<small>검색 결과 요약문 (120~150자)</small></label>
+          <div class="field"><textarea id="s_homeDescription" style="min-height:70px"></textarea></div>
+        </div>
+        <div class="row">
+          <label>네이버 소유확인 코드<small>서치어드바이저에서 받은 content 값만</small></label>
+          <div class="field"><input type="text" id="s_naverVerify" placeholder=""></div>
+        </div>
+        <div class="row">
+          <label>구글 소유확인 코드<small>서치콘솔에서 받은 content 값만</small></label>
+          <div class="field"><input type="text" id="s_googleVerify" placeholder=""></div>
+        </div>
+      </div></details>
+
+      <details class="extra" open><summary>공지 띠 <small>홈페이지 맨 위에 한 줄 (휴진 안내 등)</small></summary><div class="form">
+        <div class="row">
+          <label>표시</label>
+          <div class="field"><label style="display:flex;align-items:center;gap:8px;font-weight:400"><input type="checkbox" id="s_noticeEnabled" style="width:auto"> 홈페이지 맨 위에 공지 띠 표시</label></div>
+        </div>
+        <div class="row">
+          <label>문구<small>예) 10월 3일(금) 개천절 휴진입니다</small></label>
+          <div class="field"><input type="text" id="s_noticeText" placeholder=""></div>
+        </div>
+        <div class="row">
+          <label>링크<small>선택. 누르면 이동할 주소</small></label>
+          <div class="field"><input type="text" id="s_noticeLink" placeholder="/booking"></div>
+        </div>
+      </div></details>
+
+      <div class="actionbar">
+        <button class="btn primary" onclick="saveSite()">저장하고 홈페이지에 반영</button>
+        <button class="btn" onclick="loadSiteForm()">되돌리기</button>
+        <span class="spacer"></span>
+        <span class="msg" id="siteSaveMsg"></span>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ---------- 공통 ----------
+// 두 가지 저장 방식:
+//  · 로컬(localhost): node tools/admin-server.js 가 파일을 직접 씀 (비밀번호 로그인)
+//  · 인터넷(Cloudflare Pages 어드민): GitHub 저장소(main)에 글을 저장 → Cloudflare Pages 가 홈페이지를 자동 생성 (GitHub 접속 키 로그인)
+const LOCAL = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+// 홈페이지 주소 (어드민은 별도 주소에서 돌아가므로 홈페이지 파일은 모두 이 주소 기준으로 가리킴)
+const SITE = () => (backend === gh ? String(cfg.siteUrl || "").replace(/\/+$/, "") : "");
+const siteHref = (p) => (p && p.startsWith("/") ? SITE() + p : p);
+let cfg = { owner: "", repo: "", branch: "main", siteUrl: "", buildHook: "", author: "수원 바를정한의원", categories: [] };
+let token = sessionStorage.getItem("adminToken") || localStorage.getItem("adminToken") || "";
+let meta = { categories: [], author: "수원 바를정한의원" };
+let editing = null; // 수정 중인 slug
+let thumbData = null, thumbName = "", thumbPath = "", thumbFile = null;
+let pendingImages = {}; // GitHub 모드: 본문에 넣었지만 아직 저장 안 된 이미지 { 파일명: Uint8Array }
+let backend = null;
+
+const $ = (id) => document.getElementById(id);
+function toast(msg, err) { const t = $("toast"); t.textContent = msg; t.className = "toast show" + (err ? " err" : ""); setTimeout(() => (t.className = "toast"), err ? 4500 : 2500); }
+function esc(s) { return String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+function safeSlug(s) { return String(s || "").toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 80); }
+function today() { return new Date().toISOString().slice(0, 10); }
+function sortPosts(list) { return list.sort((a, b) => (b.published || "").localeCompare(a.published || "") || (b.updatedAt || "").localeCompare(a.updatedAt || "")); }
+function bytesToB64(bytes) { let s = ""; for (let i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000)); return btoa(s); }
+function dataUrlToBytes(dataUrl) { const b = atob(dataUrl.split(",")[1]); const u = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u; }
+
+// 글 데이터 검증 + 정리 (로컬 서버와 같은 규칙)
+function validate(b) {
+  const errors = [];
+  if (!b.title || !b.title.trim()) errors.push("제목을 입력하세요");
+  if (!b.category) errors.push("카테고리를 선택하세요");
+  if (!b.description || !b.description.trim()) errors.push("description(검색 설명)을 입력하세요");
+  if (!b.content || !b.content.replace(/<[^>]+>/g, "").trim()) errors.push("내용을 입력하세요");
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(b.published || "")) errors.push("발행일 형식은 YYYY-MM-DD 입니다");
+  if (b.schema && b.schema.trim()) { try { JSON.parse(b.schema); } catch (e) { errors.push("schema 는 올바른 JSON 이어야 합니다: " + e.message); } }
+  if (errors.length) throw new Error(errors.join("\n"));
+}
+function buildPost(b, slug, existing, thumbnail) {
+  const chars = b.content.replace(/<[^>]+>/g, " ").replace(/&nbsp;/g, " ").replace(/\s/g, "").length;
+  return {
+    slug,
+    title: b.title.trim(),
+    shortTitle: (b.shortTitle || "").trim(),
+    author: (b.author || meta.author).trim(),
+    category: b.category,
+    description: b.description.trim(),
+    keywords: (b.keywords || "").trim(),
+    schema: (b.schema || "").trim(),
+    content: b.content,
+    thumbnail,
+    thumbnailAlt: (b.thumbnailAlt || "").trim(),
+    published: b.published,
+    modified: today(),
+    summary: (b.summary || []).map((s) => String(s).trim()).filter(Boolean),
+    faqs: (b.faqs || []).map((f) => ({ q: String(f.q || "").trim(), a: String(f.a || "").trim() })).filter((f) => f.q && f.a),
+    references: (b.references || []).map((s) => String(s).trim()).filter(Boolean),
+    status: b.status === "draft" ? "draft" : "published",
+    readingMinutes: Math.max(1, Math.round(chars / 500)),
+    createdAt: (existing && existing.createdAt) || new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+}
+
+// 큰 사진은 올리기 전에 줄임 (긴 변 1600px, JPEG) — 페이지 속도와 저장소 용량 때문
+async function shrinkImage(file) {
+  const ext0 = (file.name.split(".").pop() || "").toLowerCase();
+  const original = async () => ({ bytes: new Uint8Array(await file.arrayBuffer()), ext: ext0 === "jpeg" ? "jpg" : ext0 || "jpg" });
+  if (!/^image\/(png|jpeg|webp)$/.test(file.type)) return original();
+  const img = await new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = URL.createObjectURL(file); });
+  const max = 1600, scale = Math.min(1, max / Math.max(img.width, img.height));
+  if (scale === 1 && file.size < 400 * 1024) return original();
+  const c = document.createElement("canvas"); c.width = Math.round(img.width * scale); c.height = Math.round(img.height * scale);
+  c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+  const blob = await new Promise((ok) => c.toBlob(ok, "image/jpeg", 0.85));
+  return { bytes: new Uint8Array(await blob.arrayBuffer()), ext: "jpg" };
+}
+function uploadName(name, ext, prefix) {
+  const base = safeSlug((name || "image").replace(/\.[^.]+$/, "")) || "image";
+  return `${prefix ? prefix + "-" : ""}${base}-${Date.now().toString(36)}.${ext}`;
+}
+
+// ---------- 백엔드 1: 로컬 서버 ----------
+async function api(path, opt = {}) {
+  const res = await fetch(path, { ...opt, headers: { "Content-Type": "application/json", "x-admin-token": token, ...(opt.headers || {}) } });
+  const data = await res.json().catch(() => ({}));
+  if (res.status === 401) { logout(); throw new Error(data.error || "로그인이 필요합니다"); }
+  if (!res.ok) throw new Error(data.error || "오류가 발생했습니다");
+  return data;
+}
+const localBackend = {
+  name: "local",
+  async login(pw) {
+    const r = await fetch("/api/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ password: pw }) });
+    const d = await r.json(); if (!r.ok) throw new Error(d.error); return d.token;
+  },
+  meta: () => api("/api/meta"),
+  list: () => api("/api/columns"),
+  get: (slug) => api("/api/columns/" + slug),
+  async save(data) { return api("/api/columns", { method: "POST", body: JSON.stringify(data) }); },
+  remove: (slug) => api("/api/columns/" + slug, { method: "DELETE" }),
+  async insertImageFile(file) { const data = await readFile(file); const r = await api("/api/upload", { method: "POST", body: JSON.stringify({ name: file.name, data }) }); return r.path; },
+  rebuild: () => api("/api/rebuild", { method: "POST" }),
+  getSite: () => api("/api/site"),
+  async saveSite(site) { return api("/api/site", { method: "POST", body: JSON.stringify(site) }); },
+  postUrl: (slug) => `/pages/columns/${slug}`
+};
+
+// ---------- 백엔드 2: GitHub 저장소 (배포된 사이트) ----------
+const gh = {
+  name: "github",
+  base() { return `https://api.github.com/repos/${cfg.owner}/${cfg.repo}`; },
+  async req(p, opt = {}) {
+    if (!token) throw new Error("GitHub 접속 키가 연결되지 않았습니다. 왼쪽 메뉴 맨 아래에 키를 넣고 [저장]을 누르세요.");
+    const res = await fetch(this.base() + p, { ...opt, headers: { Accept: opt.raw ? "application/vnd.github.raw+json" : "application/vnd.github+json", Authorization: "Bearer " + token, "X-GitHub-Api-Version": "2022-11-28", ...(opt.body ? { "Content-Type": "application/json" } : {}) } });
+    if (res.status === 401) { token = ""; localStorage.removeItem("adminToken"); sessionStorage.removeItem("adminToken"); updateKeyStatus("bad", "키가 거부됨 — 다시 입력"); throw new Error("접속 키가 만료되었거나 올바르지 않습니다. 왼쪽 아래에서 새 키를 넣어 주세요."); }
+    if (res.status === 404 && opt.allow404) return null;
+    if (opt.raw) { if (!res.ok) throw new Error("GitHub 오류 " + res.status); return res.text(); }
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.message || "GitHub 오류 " + res.status);
+    return data;
+  },
+  async login(key) {
+    token = key.trim();
+    if (!cfg.owner || !cfg.repo) throw new Error("admin/config.json 에 GitHub 저장소(owner/repo)가 설정되지 않았습니다");
+    const r = await this.req("");
+    if (!r.permissions || !r.permissions.push) throw new Error("이 접속 키에는 저장소 쓰기 권한이 없습니다");
+    return token;
+  },
+  async meta() { return { categories: cfg.categories, author: cfg.author, siteUrl: location.origin }; },
+  dataPath: (slug) => `pages/columns/_data/${slug}.json`,
+  async list() {
+    const files = (await this.req(`/contents/pages/columns/_data?ref=${cfg.branch}`, { allow404: true })) || [];
+    const posts = await Promise.all(files.filter((f) => f.name.endsWith(".json")).map((f) => this.get(f.name.replace(/\.json$/, ""))));
+    return sortPosts(posts.filter(Boolean)).map(({ content, ...rest }) => ({ ...rest, chars: content ? content.replace(/<[^>]+>/g, "").replace(/\s/g, "").length : 0 }));
+  },
+  async get(slug) {
+    const text = await this.req(`/contents/${this.dataPath(slug)}?ref=${cfg.branch}`, { raw: true, allow404: true });
+    if (text == null) throw new Error("없는 글입니다");
+    return JSON.parse(text);
+  },
+  // 여러 파일을 한 번의 커밋으로 (블롭 → 트리 → 커밋 → 브랜치 이동)
+  async commit(files, message) {
+    const ref = await this.req(`/git/ref/heads/${cfg.branch}`);
+    const headSha = ref.object.sha;
+    const head = await this.req(`/git/commits/${headSha}`);
+    const tree = [];
+    for (const f of files) {
+      if (f.remove) { tree.push({ path: f.path, mode: "100644", type: "blob", sha: null }); continue; }
+      const body = typeof f.content === "string" ? { content: f.content, encoding: "utf-8" } : { content: bytesToB64(f.content), encoding: "base64" };
+      const blob = await this.req(`/git/blobs`, { method: "POST", body: JSON.stringify(body) });
+      tree.push({ path: f.path, mode: "100644", type: "blob", sha: blob.sha });
+    }
+    const newTree = await this.req(`/git/trees`, { method: "POST", body: JSON.stringify({ base_tree: head.tree.sha, tree }) });
+    const commit = await this.req(`/git/commits`, { method: "POST", body: JSON.stringify({ message, tree: newTree.sha, parents: [headSha] }) });
+    await this.req(`/git/refs/heads/${cfg.branch}`, { method: "PATCH", body: JSON.stringify({ sha: commit.sha }) });
+    return commit.sha;
+  },
+  async save(b) {
+    validate(b);
+    const slug = safeSlug(b.slug) || `${b.published}-column-${Date.now().toString(36).slice(-4)}`;
+    const existing = b.originalSlug ? await this.get(b.originalSlug).catch(() => null) : null;
+    // 새 주소(slug)가 저장소에 이미 있는 글과 겹치면 멈춤 (다른 글을 덮어쓰지 않도록)
+    if (!existing || existing.slug !== slug) {
+      const dup = await this.req(`/contents/${this.dataPath(slug)}?ref=${cfg.branch}`, { raw: true, allow404: true });
+      if (dup != null) throw new Error(`같은 주소의 글이 이미 있습니다: ${slug}\n발행 설정에서 글 주소(슬러그)를 바꿔 주세요.`);
+    }
+    const files = [];
+    if (existing && existing.slug !== slug) files.push({ path: this.dataPath(existing.slug), remove: true });
+    let thumbnail = b.thumbnail || (existing && existing.thumbnail) || "";
+    if (b.thumbnailFile) {
+      const { bytes, ext } = await shrinkImage(b.thumbnailFile);
+      const name = uploadName(b.thumbnailFile.name, ext, slug);
+      files.push({ path: `assets/img/columns/${name}`, content: bytes });
+      thumbnail = `/assets/img/columns/${name}`;
+    }
+    // 본문에 넣어둔 이미지(data URL) → 파일로 커밋하고 경로로 바꿈
+    const doc = new DOMParser().parseFromString(`<body>${b.content}</body>`, "text/html");
+    doc.querySelectorAll("img[data-upload]").forEach((img) => {
+      const name = img.getAttribute("data-upload");
+      if (pendingImages[name]) files.push({ path: `assets/img/columns/${name}`, content: pendingImages[name] });
+      img.setAttribute("src", `/assets/img/columns/${name}`); img.removeAttribute("data-upload");
+    });
+    b.content = doc.body.innerHTML;
+    const post = buildPost(b, slug, existing, thumbnail);
+    files.push({ path: this.dataPath(slug), content: JSON.stringify(post, null, 2) + "\n" });
+    const sha = await this.commit(files, `${existing ? "칼럼 수정" : "칼럼 작성"}: ${post.title}`);
+    pendingImages = {};
+    return { ok: true, slug, sha, url: post.status === "draft" ? null : this.postUrl(slug) };
+  },
+  async remove(slug) {
+    const post = await this.get(slug);
+    const files = [{ path: this.dataPath(slug), remove: true }];
+    if (post.thumbnail && post.thumbnail.startsWith("/assets/img/columns/")) files.push({ path: post.thumbnail.slice(1), remove: true });
+    const sha = await this.commit(files, `칼럼 삭제: ${post.title}`);
+    return { ok: true, sha };
+  },
+  async insertImageFile(file) {
+    const { bytes, ext } = await shrinkImage(file);
+    const name = uploadName(file.name, ext, "img");
+    pendingImages[name] = bytes;
+    return { src: `data:image/${ext === "jpg" ? "jpeg" : ext};base64,${bytesToB64(bytes)}`, name };
+  },
+  async rebuild() {
+    if (!cfg.buildHook) throw new Error("저장할 때마다 Cloudflare Pages 가 홈페이지를 자동으로 다시 만듭니다. 강제 재생성이 필요하면 Cloudflare 대시보드 → 프로젝트 → Deployments → Retry deployment 를 누르세요");
+    await fetch(cfg.buildHook, { method: "POST", mode: "no-cors" });
+    return { published: "-", hook: true };
+  },
+  postUrl: (slug) => `${SITE()}/pages/columns/${slug}`,
+  async getSite() {
+    const text = await this.req(`/contents/site.json?ref=${cfg.branch}`, { raw: true, allow404: true });
+    if (text == null) throw new Error("저장소에 site.json 이 없습니다");
+    return JSON.parse(text);
+  },
+  async saveSite(site) {
+    const sha = await this.commit([{ path: "site.json", content: JSON.stringify(site, null, 2) + "\n" }], "홈페이지 설정 변경");
+    return { ok: true, sha };
+  },
+  // Cloudflare Pages 빌드가 끝나 새 커밋이 반영될 때까지 기다림 (최대 4분)
+  async waitDeploy(sha, onTick) {
+    const started = Date.now();
+    while (Date.now() - started < 240000) {
+      await new Promise((r) => setTimeout(r, 6000));
+      try { const info = await (await fetch(`${SITE()}/build-info.json?t=${Date.now()}`, { cache: "no-store" })).json(); if (info.commit === sha) return true; } catch (e) {}
+      if (onTick) onTick(Math.round((Date.now() - started) / 1000));
+    }
+    return false;
+  }
+};
+
+// ---------- 로그인 / 시작 ----------
+async function loadConfig() {
+  try { cfg = { ...cfg, ...(await (await fetch("config.json?t=" + Date.now(), { cache: "no-store" })).json()) }; } catch (e) {}
+  backend = LOCAL ? localBackend : gh;
+  const isGh = backend === gh;
+  $("pw").placeholder = isGh ? "GitHub 접속 키 (github_pat_… 로 시작)" : "비밀번호";
+  $("loginHelp").classList.toggle("hidden", !isGh);
+  $("rememberRow").classList.toggle("hidden", !isGh);
+  $("btnRebuild").textContent = isGh ? "🔄 재생성 안내 (Cloudflare)" : "🔄 전체 다시 생성 (SEO 갱신)";
+  $("ghKeyBox").classList.toggle("hidden", !isGh);
+  if (isGh) { updateKeyStatus(token ? "ok" : "", token ? "연결됨 ✓" : "미연결 — 아래에 키를 입력하세요"); }
+  $("navSiteColumns").href = SITE() + "/pages/columns/";
+  $("navSiteHome").href = SITE() + "/";
+}
+async function login(e) {
+  e.preventDefault();
+  $("loginErr").textContent = "";
+  try {
+    token = await backend.login($("pw").value);
+    if (backend === gh && $("remember").checked) localStorage.setItem("adminToken", token); else sessionStorage.setItem("adminToken", token);
+    await boot();
+  } catch (err) { token = ""; $("loginErr").textContent = err.message; }
+}
+function logout() {
+  token = ""; sessionStorage.removeItem("adminToken"); localStorage.removeItem("adminToken");
+  if (backend === gh) {
+    // 저장된 GitHub 키를 지우고, 브라우저가 기억한 아이디·비밀번호도 잊게 한 뒤 다시 묻게 한다
+    updateKeyStatus("", "미연결 — 아래에 키를 입력하세요"); $("kbInput").value = "";
+    fetch(location.pathname, { headers: { Authorization: "Basic " + btoa("logout:" + Date.now()) }, cache: "no-store" }).catch(() => {}).finally(() => location.reload());
+    return;
+  }
+  $("app").classList.add("hidden"); $("login").classList.remove("hidden");
+}
+function updateKeyStatus(cls, text) { const el = $("kbStatus"); if (!el) return; el.className = "kb-status" + (cls ? " " + cls : ""); el.textContent = text; }
+async function saveKey() {
+  const key = $("kbInput").value.trim();
+  if (!key) { toast("키를 붙여넣은 뒤 저장을 누르세요", true); return; }
+  updateKeyStatus("", "확인 중…");
+  try {
+    token = await gh.login(key);
+    localStorage.setItem("adminToken", token);
+    $("kbInput").value = "";
+    updateKeyStatus("ok", "연결됨 ✓");
+    toast("GitHub 연결 완료");
+    if ((location.hash || "#list") === "#list") loadList();
+  } catch (e) { token = ""; updateKeyStatus("bad", "연결 실패"); toast(e.message, true); }
+}
+function clearKey() {
+  if (!token) { toast("연결된 키가 없습니다"); return; }
+  if (!confirm("이 브라우저에 저장된 GitHub 접속 키를 지울까요? (GitHub 쪽 키는 그대로 남습니다)")) return;
+  token = ""; localStorage.removeItem("adminToken"); sessionStorage.removeItem("adminToken");
+  updateKeyStatus("", "미연결 — 아래에 키를 입력하세요"); $("kbInput").value = ""; location.hash = "#list"; loadList();
+}
+
+async function boot() {
+  try {
+    meta = await backend.meta();
+    $("login").classList.add("hidden"); $("app").classList.remove("hidden");
+    const sel = $("f_category"); sel.innerHTML = '<option value="">카테고리</option>' + meta.categories.map((c) => `<option>${c}</option>`).join("");
+    route();
+  } catch (e) { if (backend === gh) { toast(e.message, true); } else { logout(); if (e.message) $("loginErr").textContent = e.message; } }
+}
+window.addEventListener("hashchange", route);
+async function route() {
+  const h = location.hash || "#list";
+  $("navList").classList.toggle("active", h === "#list");
+  $("navNew").classList.toggle("active", h === "#new");
+  $("navSite").classList.toggle("active", h === "#site");
+  if (h === "#site") { show("site"); await loadSiteForm(); }
+  else if (h === "#new") { resetForm(); show("form"); }
+  else if (h.startsWith("#edit=")) { await loadPost(h.slice(6)); show("form"); }
+  else { await loadList(); show("list"); }
+}
+function show(v) { $("viewList").classList.toggle("hidden", v !== "list"); $("viewForm").classList.toggle("hidden", v !== "form"); $("viewSite").classList.toggle("hidden", v !== "site"); window.scrollTo(0, 0); }
+
+// ---------- 홈페이지 설정 (site.json) ----------
+const SITE_FIELDS = [
+  ["s_name", "clinic.name"], ["s_doctor", "clinic.doctor"], ["s_phone", "clinic.phone"], ["s_email", "clinic.email"], ["s_bizNo", "clinic.bizNo"],
+  ["s_region", "clinic.region"], ["s_city", "clinic.city"], ["s_street", "clinic.street"], ["s_addressShort", "clinic.addressShort"], ["s_landmark", "clinic.landmark"], ["s_parking", "clinic.parking"], ["s_ward1", "clinic.ward1"], ["s_ward2", "clinic.ward2"],
+  ["s_weekdayOpen", "hours.weekdayOpen"], ["s_weekdayClose", "hours.weekdayClose"], 
+  ["s_satOpen", "hours.satOpen"], ["s_satClose", "hours.satClose"], ["s_satNote", "hours.satNote"], ["s_sunOpen", "hours.sunOpen"], ["s_sunClose", "hours.sunClose"], ["s_sunNote", "hours.sunNote"], ["s_lunchStart", "hours.lunchStart"], ["s_lunchEnd", "hours.lunchEnd"], ["s_closedText", "hours.closedText"], ["s_note", "hours.note"],
+  ["s_naverBooking", "channels.naverBooking"], ["s_kakao", "channels.kakao"], ["s_blog", "channels.blog"], ["s_naverMap", "channels.naverMap"], ["s_kakaoMap", "channels.kakaoMap"], ["s_youtube", "channels.youtube"], ["s_instagram", "channels.instagram"], ["s_cafe", "channels.cafe"],
+  ["s_homeTitle", "seo.homeTitle"], ["s_homeDescription", "seo.homeDescription"], ["s_naverVerify", "seo.naverVerify"], ["s_googleVerify", "seo.googleVerify"],
+  ["s_noticeEnabled", "notice.enabled"], ["s_noticeText", "notice.text"], ["s_noticeLink", "notice.link"]
+];
+const getPath = (o, p) => p.split(".").reduce((x, k) => (x == null ? undefined : x[k]), o);
+const setPath = (o, p, v) => { const ks = p.split("."); let x = o; ks.slice(0, -1).forEach((k) => (x = x[k] = x[k] || {})); x[ks[ks.length - 1]] = v; };
+let siteData = null;
+async function loadSiteForm() {
+  $("siteSaveMsg").textContent = ""; $("siteMsg").textContent = "불러오는 중…";
+  try {
+    siteData = await backend.getSite();
+    SITE_FIELDS.forEach(([id, p]) => { const el = $(id); const v = getPath(siteData, p); if (el.type === "checkbox") el.checked = !!v; else el.value = v == null ? "" : v; });
+    $("siteMsg").textContent = "";
+  } catch (e) { $("siteMsg").textContent = ""; toast(e.message, true); }
+}
+function collectSite() {
+  const out = JSON.parse(JSON.stringify(siteData || {}));
+  SITE_FIELDS.forEach(([id, p]) => { const el = $(id); setPath(out, p, el.type === "checkbox" ? el.checked : el.value.trim()); });
+  return out;
+}
+async function saveSite() {
+  if (busy) return;
+  const site = collectSite();
+  const errs = [];
+  if (!site.clinic.name) errs.push("병원명을 입력하세요");
+  if (!/^[\d-]{9,13}$/.test(site.clinic.phone)) errs.push("대표전화 형식을 확인하세요 (예: 031-217-3375)");
+  ["weekdayOpen", "weekdayClose", "satOpen", "satClose", "sunOpen", "sunClose", "lunchStart", "lunchEnd"].forEach((k) => { if (!/^\d{2}:\d{2}$/.test(site.hours[k] || "")) errs.push("진료시간을 모두 입력하세요"); });
+  if (site.notice.enabled && !site.notice.text) errs.push("공지 띠를 켜려면 문구를 입력하세요");
+  if (errs.length) { toast([...new Set(errs)].join("\n"), true); return; }
+  if (backend === gh && !confirm("홈페이지 설정을 GitHub 에 저장하고 홈페이지에 반영할까요?\n(칼럼 등 다른 내용은 바뀌지 않습니다)")) return;
+  busy = true; $("siteSaveMsg").textContent = "저장 중…";
+  try {
+    const r = await backend.saveSite(site);
+    siteData = site;
+    if (r.sha) {
+      $("siteSaveMsg").textContent = "GitHub 저장 완료 · 홈페이지 반영 중 (보통 1~2분)…";
+      const ok = await gh.waitDeploy(r.sha, (s) => ($("siteSaveMsg").textContent = `GitHub 저장 완료 · 홈페이지 반영 중 ${s}초…`));
+      $("siteSaveMsg").textContent = ok ? "홈페이지 반영 완료 ✔" : "저장은 됐지만 반영 확인이 늦어집니다. 잠시 후 홈페이지를 새로고침해 보세요";
+    } else {
+      $("siteSaveMsg").textContent = `저장 완료 · 페이지 ${r.changed}개 갱신${r.seo === false ? " (SEO 스크립트 오류 — 콘솔 확인)" : ""}`;
+    }
+    toast("홈페이지 설정을 저장했습니다");
+  } catch (e) { $("siteSaveMsg").textContent = ""; toast(e.message, true); }
+  busy = false;
+}
+
+// ---------- 목록 ----------
+async function loadList() {
+  $("listBody").innerHTML = '<div class="empty">불러오는 중…</div>';
+  let list;
+  try { list = await backend.list(); } catch (e) { $("listBody").innerHTML = `<div class="empty">${esc(e.message)}</div>`; return; }
+  if (!list.length) { $("listBody").innerHTML = '<div class="empty">아직 글이 없습니다. "새 글 쓰기"로 첫 글을 올려보세요.</div>'; return; }
+  $("listBody").innerHTML = `<table class="table"><thead><tr><th>썸네일</th><th>제목</th><th>카테고리</th><th>발행일</th><th>상태</th><th>관리</th></tr></thead><tbody>` +
+    list.map((p) => `<tr>
+      <td class="thumb"><img src="${siteHref(p.thumbnail || "/assets/img/main/tit_logo.png")}" alt=""></td>
+      <td class="title"><a href="#edit=${p.slug}">${esc(p.title)}</a><small>${esc(p.description || "").slice(0, 80)}${(p.description || "").length > 80 ? "…" : ""} · 본문 ${p.chars}자 · FAQ ${(p.faqs || []).length}개</small></td>
+      <td>${esc(p.category)}</td>
+      <td>${p.published}</td>
+      <td><span class="status ${p.status}">${p.status === "draft" ? "임시저장" : "공개"}</span></td>
+      <td class="actions"><a class="btn small" href="#edit=${p.slug}">수정</a>${p.status !== "draft" ? `<a class="btn small" href="${backend.postUrl(p.slug)}" target="_blank">보기</a>` : ""}<button class="btn small danger" onclick="del('${p.slug}')">삭제</button></td>
+    </tr>`).join("") + `</tbody></table>`;
+}
+
+// ---------- 폼 ----------
+function resetForm() {
+  editing = null; thumbData = null; thumbName = ""; thumbPath = ""; thumbFile = null; pendingImages = {};
+  $("formTitle").textContent = "새 글 쓰기";
+  ["f_title", "f_description", "f_keywords", "f_schema", "f_thumbAlt", "f_summary", "f_references", "f_slug", "f_shortTitle"].forEach((id) => ($(id).value = ""));
+  $("f_author").value = meta.author; $("f_category").value = ""; $("f_published").value = today();
+  $("content").innerHTML = ""; $("faqRows").innerHTML = ""; addFaq(); addFaq(); addFaq();
+  $("thumbPreview").innerHTML = '<div class="no">미리보기</div>'; $("thumbName").textContent = "선택된 파일 없음"; $("thumbLib").value = "";
+  $("btnPreview").disabled = true; $("btnDelete").classList.add("hidden"); $("saveMsg").textContent = "";
+  count("f_title", "c_title", 60); count("f_description", "c_desc", 150); editorStat();
+}
+async function loadPost(slug) {
+  resetForm();
+  try {
+    const p = await backend.get(slug);
+    editing = slug;
+    $("formTitle").textContent = "글 수정";
+    $("f_title").value = p.title; $("f_author").value = p.author || meta.author; $("f_category").value = p.category;
+    $("f_description").value = p.description; $("f_keywords").value = p.keywords || ""; $("f_schema").value = p.schema || "";
+    $("content").innerHTML = p.content || ""; $("f_thumbAlt").value = p.thumbnailAlt || "";
+    $("f_summary").value = (p.summary || []).join("\n"); $("f_references").value = (p.references || []).join("\n");
+    $("f_slug").value = p.slug; $("f_published").value = p.published; $("f_shortTitle").value = p.shortTitle || "";
+    $("faqRows").innerHTML = ""; (p.faqs && p.faqs.length ? p.faqs : [{}, {}, {}]).forEach((f) => addFaq(f.q, f.a));
+    if (p.thumbnail) { thumbPath = p.thumbnail; $("thumbPreview").innerHTML = `<img src="${siteHref(p.thumbnail)}" alt="">`; $("thumbName").textContent = p.thumbnail.split("/").pop(); }
+    $("btnPreview").disabled = p.status === "draft"; $("btnDelete").classList.remove("hidden");
+    count("f_title", "c_title", 60); count("f_description", "c_desc", 150); editorStat();
+  } catch (e) { toast(e.message, true); location.hash = "#list"; }
+}
+function count(id, cid, max) { const n = $(id).value.length; const el = $(cid); el.textContent = `${n} / ${max}`; el.className = n > max ? "over" : ""; }
+function editorStat() { const c = $("content"); const chars = c.innerText.replace(/\s/g, "").length; const h2 = c.querySelectorAll("h2").length; $("stat").textContent = `${chars}자 · 소제목 ${h2}개 · 읽는 시간 약 ${Math.max(1, Math.round(chars / 500))}분`; }
+function addFaq(q = "", a = "") {
+  const d = document.createElement("div"); d.className = "faq-row";
+  d.innerHTML = `<textarea placeholder="질문 (예: 돌발성 난청은 입원해야 하나요?)">${esc(q)}</textarea><textarea placeholder="답변 (결론부터 2~3문장)">${esc(a)}</textarea><button type="button" class="btn small" onclick="this.parentElement.remove()">삭제</button>`;
+  $("faqRows").appendChild(d);
+}
+
+// ---------- 에디터 ----------
+function cmd(c, v) { $("content").focus(); document.execCommand(c, false, v || null); editorStat(); }
+function block(tag) { if (!tag) return; cmd("formatBlock", "<" + tag + ">"); }
+function link() { const u = prompt("링크 주소를 입력하세요 (예: /pages/pain/chuna.html 또는 https://…)"); if (u) cmd("createLink", u); }
+function keyAnswer() {
+  $("content").focus();
+  const sel = window.getSelection(); if (!sel.rangeCount) return;
+  let node = sel.anchorNode; while (node && node !== $("content") && !(node.nodeType === 1 && /^(P|H2|H3|DIV|LI|BLOCKQUOTE)$/.test(node.tagName))) node = node.parentNode;
+  if (!node || node === $("content")) { document.execCommand("insertHTML", false, '<div class="key-answer"><strong>용어는</strong> 한 문장 정의를 여기에 씁니다.</div><p><br></p>'); return; }
+  if (node.classList && node.classList.contains("key-answer")) { node.replaceWith(...[...node.childNodes].length ? [Object.assign(document.createElement("p"), { innerHTML: node.innerHTML })] : []); }
+  else { const box = document.createElement("div"); box.className = "key-answer"; box.innerHTML = node.innerHTML; node.replaceWith(box); }
+  editorStat();
+}
+function checkList() { $("content").focus(); document.execCommand("insertHTML", false, '<ul class="check-list"><li>항목 1</li><li>항목 2</li><li>항목 3</li></ul><p><br></p>'); }
+$("content").addEventListener("paste", (e) => {
+  e.preventDefault();
+  const html = e.clipboardData.getData("text/html"); const text = e.clipboardData.getData("text/plain");
+  if (html) {
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    doc.querySelectorAll("script,style,meta,link,iframe").forEach((n) => n.remove());
+    doc.querySelectorAll("*").forEach((n) => { [...n.attributes].forEach((a) => { if (!/^(href|src|alt)$/.test(a.name)) n.removeAttribute(a.name); }); });
+    document.execCommand("insertHTML", false, doc.body.innerHTML);
+  } else {
+    document.execCommand("insertHTML", false, text.split(/\n{2,}/).map((p) => "<p>" + esc(p).replace(/\n/g, "<br>") + "</p>").join(""));
+  }
+  editorStat();
+});
+function readFile(file) { return new Promise((ok, no) => { const r = new FileReader(); r.onload = () => ok(r.result); r.onerror = no; r.readAsDataURL(file); }); }
+async function insertImage(input) {
+  const f = input.files[0]; if (!f) return;
+  try {
+    const r = await backend.insertImageFile(f);
+    const alt = prompt("이미지 설명(alt)을 입력하세요", f.name.replace(/\.[^.]+$/, "")) || "";
+    if (typeof r === "string") cmd("insertHTML", `<img src="${r}" alt="${esc(alt)}"><p><br></p>`);
+    else cmd("insertHTML", `<img src="${r.src}" data-upload="${r.name}" alt="${esc(alt)}"><p><br></p>`);
+    toast("이미지를 넣었습니다");
+  } catch (e) { toast(e.message, true); }
+  input.value = "";
+}
+async function pickThumb(input) {
+  const f = input.files[0]; if (!f) return;
+  thumbData = await readFile(f); thumbName = f.name; thumbPath = ""; thumbFile = f;
+  $("thumbPreview").innerHTML = `<img src="${thumbData}" alt="">`; $("thumbName").textContent = f.name; $("thumbLib").value = "";
+  if (!$("f_thumbAlt").value) $("f_thumbAlt").value = f.name.replace(/\.[^.]+$/, "").replace(/[-_]/g, " ");
+}
+function useLib(v) { if (!v) return; thumbData = null; thumbName = ""; thumbFile = null; thumbPath = v; $("thumbPreview").innerHTML = `<img src="${siteHref(v)}" alt="">`; $("thumbName").textContent = v.split("/").pop(); if (!$("f_thumbAlt").value) $("f_thumbAlt").value = $("thumbLib").selectedOptions[0].textContent + " 사진"; }
+
+// ---------- 저장 / 삭제 / 미리보기 ----------
+function collect(status) {
+  return {
+    originalSlug: editing, slug: $("f_slug").value.trim(), title: $("f_title").value, author: $("f_author").value, category: $("f_category").value,
+    description: $("f_description").value, keywords: $("f_keywords").value, schema: $("f_schema").value, content: $("content").innerHTML,
+    thumbnail: thumbPath, thumbnailData: thumbData, thumbnailName: thumbName, thumbnailFile: thumbFile, thumbnailAlt: $("f_thumbAlt").value,
+    published: $("f_published").value, shortTitle: $("f_shortTitle").value,
+    summary: $("f_summary").value.split("\n"), references: $("f_references").value.split("\n"),
+    faqs: [...document.querySelectorAll("#faqRows .faq-row")].map((r) => ({ q: r.children[0].value, a: r.children[1].value })),
+    status
+  };
+}
+let busy = false;
+async function save(status) {
+  if (busy) return; busy = true;
+  $("saveMsg").textContent = "저장 중…";
+  try {
+    const data = collect(status);
+    if (backend === localBackend) delete data.thumbnailFile;
+    if (backend === gh) {
+      // 발행 전 확인 단계: 무엇이 어떻게 올라가는지 보여주고 동의를 받음
+      const imgs = Object.keys(pendingImages).length + (data.thumbnailFile ? 1 : 0);
+      const lines = [
+        editing ? `기존 글 수정: ${data.title.trim()}` : `새 글 작성: ${data.title.trim()}`,
+        status === "draft" ? "상태: 임시저장 (홈페이지에 보이지 않음)" : "상태: 공개",
+        `글 주소: /pages/columns/${safeSlug(data.slug) || "(자동 생성)"}`,
+        imgs ? `새로 올라가는 사진: ${imgs}장` : "새로 올라가는 사진: 없음",
+        "", "다른 글은 건드리지 않습니다. 이대로 GitHub 에 저장할까요?"
+      ];
+      if (!confirm(lines.join("\n"))) { $("saveMsg").textContent = ""; busy = false; return; }
+    }
+    const r = await backend.save(data);
+    editing = r.slug; $("f_slug").value = r.slug; thumbData = null; thumbFile = null;
+    if (r.sha) {
+      $("content").querySelectorAll("img[data-upload]").forEach((img) => { img.src = `${SITE()}/assets/img/columns/${img.getAttribute("data-upload")}`; img.removeAttribute("data-upload"); });
+      thumbPath = (await backend.get(r.slug)).thumbnail || thumbPath;
+    }
+    $("btnPreview").disabled = status === "draft"; $("btnDelete").classList.remove("hidden"); $("formTitle").textContent = "글 수정";
+    history.replaceState(null, "", "#edit=" + r.slug);
+    if (r.sha) {
+      toast(status === "draft" ? "임시저장 완료 (GitHub)" : "저장 완료 · 홈페이지에 반영 중");
+      $("saveMsg").textContent = "GitHub 저장 완료 · 홈페이지 반영 중 (보통 1~2분)…";
+      const ok = await gh.waitDeploy(r.sha, (s) => ($("saveMsg").textContent = `GitHub 저장 완료 · 홈페이지 반영 중 ${s}초…`));
+      $("saveMsg").textContent = ok ? (status === "draft" ? "임시저장했습니다 (홈페이지에는 보이지 않음)" : "홈페이지 반영 완료 ✔ '미리보기'로 확인하세요") : "저장은 됐지만 반영 확인이 늦어집니다. 잠시 후 홈페이지를 새로고침해 보세요";
+    } else {
+      $("saveMsg").textContent = status === "draft" ? "임시저장했습니다 (홈페이지에는 보이지 않음)" : `공개했습니다 · 목록과 SEO 데이터 갱신 완료${r.seo === false ? " (SEO 스크립트 오류 — 콘솔 확인)" : ""}`;
+      toast(status === "draft" ? "임시저장 완료" : "공개 완료");
+    }
+  } catch (e) { $("saveMsg").textContent = ""; toast(e.message, true); }
+  busy = false;
+}
+function preview() { if (editing) window.open(backend.postUrl(editing) + "?t=" + Date.now(), "_blank"); }
+async function del(slug) {
+  slug = slug || editing; if (!slug) return;
+  if (!confirm("이 글을 삭제할까요? 되돌릴 수 없습니다.")) return;
+  try {
+    const r = await backend.remove(slug);
+    toast(r.sha ? "삭제했습니다 · 홈페이지에는 1~2분 후 반영" : "삭제했습니다");
+    location.hash = "#list"; if (location.hash === "#list") loadList();
+  } catch (e) { toast(e.message, true); }
+}
+async function rebuild() {
+  try { const r = await backend.rebuild(); toast(r.hook ? "Cloudflare 에 재생성을 요청했습니다 (1~2분)" : `전체 재생성 완료 · 공개 글 ${r.published}편` + (r.imported ? ` · 가져온 글 ${r.imported}편` : "")); if ((location.hash || "#list") === "#list") loadList(); }
+  catch (e) { toast(e.message, true); }
+}
+
+// 시작 (주소에 ?token=… 이 있으면 그 토큰으로 로그인 상태 유지 — 로컬 테스트용)
+(async () => {
+  await loadConfig();
+  const qsToken = new URLSearchParams(location.search).get("token");
+  if (qsToken) { token = qsToken; sessionStorage.setItem("adminToken", token); history.replaceState(null, "", location.pathname + location.hash); }
+  if (backend === gh || token) boot(); else $("login").classList.remove("hidden");
+})();
+</script>
+</body>
+</html>

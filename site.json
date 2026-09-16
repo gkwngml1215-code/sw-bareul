@@ -1,0 +1,52 @@
+{
+  "clinic": {
+    "name": "수원 바를정한의원",
+    "doctor": "이진혁",
+    "phone": "031-217-3375",
+    "email": "",
+    "bizNo": "449-36-01300",
+    "region": "경기도",
+    "city": "수원시 팔달구",
+    "street": "권광로 274 (인계동, 태현빌딩) 1층",
+    "addressShort": "수원 팔달구 권광로 274 태현빌딩 1층",
+    "landmark": "분당선 수원시청역 9번 출구",
+    "parking": "외래건물 지하 1층 주차 (주차등록 시 2시간 무료)",
+    "ward1": "1병동 : 수원시 팔달구 권광로 270 (인계동) 형석빌딩 3층",
+    "ward2": "2병동 : 수원시 팔달구 권광로 274 (인계동) 태현빌딩 3층"
+  },
+  "hours": {
+    "weekdayOpen": "10:00",
+    "weekdayClose": "20:00",
+    "satOpen": "10:00",
+    "satClose": "15:00",
+    "satNote": "점심시간 없이 진료",
+    "sunOpen": "10:00",
+    "sunClose": "15:00",
+    "sunNote": "일요일 · 공휴일도 진료",
+    "lunchStart": "13:00",
+    "lunchEnd": "14:00",
+    "closedText": "연중무휴 · 입원실 365일 운영",
+    "note": "이명 · 난청 · 구안와사는 <strong>초기 골든타임</strong>이 중요합니다. 지방 환자분은 예약 시 우선 배정해 드립니다."
+  },
+  "channels": {
+    "naverBooking": "https://m.booking.naver.com/booking/13/bizes/304582?theme=place&entry=pll&lang=ko&area=pll",
+    "kakao": "https://pf.kakao.com/_vAzCxd",
+    "blog": "https://blog.naver.com/wuminzhi",
+    "naverMap": "https://map.naver.com/p/entry/place/34778565",
+    "kakaoMap": "https://kko.kakao.com/NYFSUrOgWd",
+    "youtube": "https://www.youtube.com/@jssljh",
+    "instagram": "https://www.instagram.com/bareuljung.suwon",
+    "cafe": "https://cafe.naver.com/nima32"
+  },
+  "seo": {
+    "homeTitle": "수원 바를정한의원 | 이명·난청·구안와사·어지럼증 입원 집중치료 | 인계동 한의원",
+    "homeDescription": "수원 팔달구 인계동 바를정한의원. 이명·돌발성 난청·메니에르·구안와사(안면신경마비)·안면경련을 한방 안이비인후피부과·내과 전문의 4인이 진료합니다. 1~2인실 입원 집중치료, 양·한방 협진. 대표전화 031-217-3375",
+    "naverVerify": "",
+    "googleVerify": ""
+  },
+  "notice": {
+    "enabled": false,
+    "text": "",
+    "link": ""
+  }
+}
