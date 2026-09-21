@@ -33,7 +33,7 @@ fs.writeFileSync(path.join(ROOT, "build-info.json"), JSON.stringify({ commit, bu
 
 // 공개 제외 목록 (저장소 루트 기준)
 const EXCLUDE = new Set(["칼럼", "tools", "admin", "dist", "node_modules", ".git", ".gitignore", ".node-version", "site.json", "README.md", "배포가이드.md", "구현가이드.md", "구현가이드.html", "package.json", "package-lock.json"]);
-const EXCLUDE_PATHS = new Set(["pages/columns/_data", "pages/columns/_template.html", "pages/columns/_category.html", "pages/columns/칼럼 작성 가이드.md"]);
+const EXCLUDE_PATHS = new Set(["pages/columns/_preview", "pages/columns/_data", "pages/columns/_template.html", "pages/columns/_category.html", "pages/columns/칼럼 작성 가이드.md"]);
 
 fs.rmSync(DIST, { recursive: true, force: true });
 fs.mkdirSync(DIST, { recursive: true });

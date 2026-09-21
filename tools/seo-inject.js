@@ -117,7 +117,7 @@ const TODAY = new Date().toISOString().slice(0, 10);
 function walk(dir) {
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
     const p = path.join(dir, e.name);
-    if (e.isDirectory()) return ["node_modules", "tools", "components", "admin", "_data", "dist", ".git"].includes(e.name) ? [] : walk(p);
+    if (e.isDirectory()) return ["node_modules", "tools", "components", "admin", "_data", "_preview", "dist", ".git"].includes(e.name) ? [] : walk(p);
     return [p];
   });
 }

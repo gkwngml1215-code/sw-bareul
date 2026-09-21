@@ -20,3 +20,6 @@ dist/
 
 # 칼럼 원고 원본 (Claude 가 다듬어 _data 에 넣음 — 저장소·홈페이지에 올리지 않음)
 칼럼/
+
+# 공개 전 글 미리보기 (node tools/preview-drafts.js 가 만듦)
+pages/columns/_preview/
