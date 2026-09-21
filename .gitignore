@@ -17,3 +17,6 @@ pages/columns/notice.html
 
 # 빌드 산출물 (Cloudflare Pages 가 만듦)
 dist/
+
+# 칼럼 원고 원본 (Claude 가 다듬어 _data 에 넣음 — 저장소·홈페이지에 올리지 않음)
+칼럼/
