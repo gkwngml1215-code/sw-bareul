@@ -49,6 +49,7 @@ const KEYWORDS = {
   "/pages/about/doctor.html": "오민지 원장, 이진혁 원장, 김도경 원장, 이주현 원장, 한방 안이비인후피부과 전문의, 한방내과 전문의 수원",
   "/pages/about/papers.html": "바를정한의원 논문, 이명 논문, 구안와사 후유증 논문, 안면신경마비 연합운동 논문, 구안와사 후유증 한방 해결",
   "/pages/about/facility.html": "수원 한의원 입원실, 1인실 입원 한의원, 프리미엄 입원실, 한방병원급 입원실 수원",
+  "/pages/about/etc.html": "수원 바를정한의원 그 외 진료, 척추 관절 한의원, 내과 한의원, 편평사마귀",
   "/pages/about/location.html": "수원 바를정한의원 위치, 권광로 274, 수원시청역 한의원, 인계동 한의원 주차, 바를정 오시는 길",
   "/pages/columns/index.html": "바를정한의원 칼럼, 이명 칼럼, 구안와사 칼럼, 치료 후기, 공지사항",
   "/pages/columns/column.html": "바를정 칼럼, 이명 난청 칼럼, 구안와사 칼럼, 어지럼증 칼럼",
@@ -96,7 +97,7 @@ const CLINIC = {
     { days: ["Saturday"], opens: SH.satOpen || "10:00", closes: SH.satClose || "15:00" },
     { days: ["Sunday", "PublicHolidays"], opens: SH.sunOpen || "10:00", closes: SH.sunClose || "15:00" }
   ],
-  specialties: ["이명", "돌발성 난청", "메니에르 · 어지럼증 · 이석증", "구안와사 · 안면신경마비", "안검경련 · 안면경련", "삼차신경통", "눈 · 시야 질환", "신경 · 뇌 질환", "편평사마귀 레이저", "교통사고 후유증", "척추질환", "관절질환", "재활클리닉", "내과 · 소화기 질환", "항문 · 여성질환", "입원 집중치료"]
+  specialties: ["이명", "돌발성 난청", "메니에르 · 어지럼증 · 이석증", "구안와사 · 안면신경마비", "안검경련 · 안면경련", "삼차신경통", "이명 · 난청 · 구안와사 입원 집중치료"]
 };
 if (SSEO.naverVerify) CFG.naverVerify = SSEO.naverVerify;
 if (SSEO.googleVerify) CFG.googleVerify = SSEO.googleVerify;
@@ -437,10 +438,8 @@ const pageOf = (rel) => entries.find((e) => e.rel === rel);
 const line = (rel, label) => { const p = pageOf(rel); return p ? `- [${label || p.title.split("|")[0].trim()}](${p.url}): ${p.description}` : ""; };
 const mainPages = [
   ["/pages/ear/index.html", "이명"], ["/pages/ear/hearing-loss.html", "돌발성 난청 · 난청"], ["/pages/ear/dizziness.html", "메니에르 · 어지럼 · 이석"],
-  ["/pages/face/index.html", "구안와사 (안면신경마비)"], ["/pages/face/spasm.html", "안검경련 · 안면경련"], ["/pages/face/trigeminal.html", "삼차신경통"], ["/pages/face/eye.html", "눈 · 시야 질환"], ["/pages/face/brain.html", "신경 · 뇌 질환"],
-  ["/pages/skin/wart.html", "편평사마귀 레이저"],
-  ["/pages/spine/traffic.html", "교통사고 후유증"], ["/pages/spine/index.html", "척추질환"], ["/pages/spine/joint.html", "관절질환"], ["/pages/spine/rehab.html", "재활클리닉"],
-  ["/pages/internal/index.html", "내과 · 소화기 질환"], ["/pages/internal/women.html", "항문 · 여성질환"],
+  ["/pages/face/index.html", "구안와사 (안면신경마비)"], ["/pages/face/spasm.html", "안검경련 · 안면경련"], ["/pages/face/trigeminal.html", "삼차신경통"],
+  ["/pages/ear/faq.html", "이명 · 난청 FAQ"], ["/pages/face/faq.html", "구안와사 FAQ"],
   ["/pages/about/index.html", "전국에서 찾아오는 바를정"], ["/pages/about/doctor.html", "의료진"], ["/pages/about/papers.html", "의학 논문"], ["/pages/about/facility.html", "원내 시설 · 입원실"], ["/pages/about/location.html", "오시는 길"], ["/booking.html", "진료 예약 · 입원 안내"]
 ];
 const posts = entries.filter((e) => e.article).map((e) => `- [${e.title.split("|")[0].trim()}](${e.url}) (${e.category}): ${e.description}`);

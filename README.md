@@ -38,7 +38,7 @@ privacy.html                개인정보처리방침
 sitemap.xml, robots.txt, llms.txt   검색엔진 · AI 검색용 (tools/seo-inject.js 가 자동 생성)
 site.json                   전화·주소·진료시간·링크·SEO 문구 (어드민 "홈페이지 설정"이 저장)
 components/
-  header.html               공통 헤더(GNB 7개 대메뉴 + 예약 버튼) — 메뉴 수정은 이 파일 하나만
+  header.html               공통 헤더(GNB 4개 대메뉴: 이명·난청 / 안면·신경 / 바를정 소개 / 상담·후기 + 예약 버튼) — 메뉴 수정은 이 파일 하나만
   footer.html               공통 푸터 + 플로팅 버튼(치료효과/카톡/유튜브/오시는길/전화/TOP)
   promise.html              "전국에서 찾아오는 바를정 + 진료 약속" 공통 블록 (진료과목 페이지 하단)
   inpatient.html            프리미엄 입원실 안내 공통 블록
@@ -52,9 +52,10 @@ assets/
 pages/
   ear/        이명 · 난청: index(이명), hearing-loss(돌발성 난청), dizziness(메니에르·어지럼·이석), faq
   face/       안면 · 신경: index(구안와사), spasm(안검·안면경련), trigeminal(삼차신경통), eye(눈·시야), brain(신경·뇌), faq
-  skin/       피부: wart(편평사마귀)
-  spine/      척추 · 관절: traffic(교통사고 후유증), index(척추질환), joint(관절질환), rehab(재활클리닉)
-  internal/   내과 · 면역: index(내과·소화기), women(항문·여성질환)
+  skin/       피부: wart(편평사마귀)                       ┐ 2026-09-17 부터 대메뉴에서 제외 · noindex
+  spine/      척추 · 관절: traffic, index, joint, rehab     │ (이명·난청 / 안면·신경 특화)
+  internal/   내과 · 면역: index, women                     │ about/etc.html "그 외 진료 안내" 에서만 링크
+  face/eye · face/brain (눈·시야 / 신경·뇌)                  ┘
   about/      바를정 소개: index(전국에서 찾아오는 바를정), doctor(의료진), papers(의학 논문), facility(원내 시설), location(오시는 길)
   columns/    게시판: index(전체), column/cases/reviews/press/notice(카테고리별, 빌드가 생성), 날짜-슬러그.html(글), _data/(글 원본 JSON), _template.html, _category.html
 admin/

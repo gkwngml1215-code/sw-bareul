@@ -30,6 +30,7 @@
   --serif: 'Noto Serif KR', 'Nanum Myeongjo', serif;
   --sans: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
   --eng: 'Montserrat', 'Pretendard', sans-serif;
+  --logo: 'Pretendard', 'Noto Sans KR', sans-serif; /* 로고 워드마크 — AI 원본 폰트 확인 후 교체 */
 }
 
 * { box-sizing: border-box; }
@@ -82,7 +83,7 @@ p { margin: 0 0 1em; }
 }
 .gnb-logo { display: flex; align-items: center; gap: 12px; }
 .gnb-logo img { height: 46px; width: auto; }
-.gnb-wordmark { font-family: var(--serif); font-size: 24px; font-weight: 600; color: var(--text); letter-spacing: -.02em; line-height: 1; white-space: nowrap; }
+.gnb-wordmark { font-family: var(--logo); font-size: 26px; font-weight: 300; color: #222; letter-spacing: -.01em; line-height: 1; white-space: nowrap; }
 .gnb-wordmark small { display: block; font-family: var(--eng); font-size: 10px; font-weight: 600; color: var(--muted); letter-spacing: .22em; margin-bottom: 4px; }
 .gnb-menu { display: flex; align-items: center; gap: 0; }
 .gnb-menu > li { position: relative; }
@@ -167,6 +168,10 @@ p { margin: 0 0 1em; }
 
 /* ---------- 주요진료과목 / 진료과목 알아보기 (선 카드 : 아이콘 + 이름 + 해시태그) ---------- */
 .dept-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+.dept-grid.cols-3 { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.dept-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+.dept-etc { margin-top: 22px; font-size: 14px; color: var(--muted); }
+.dept-etc a { text-decoration: underline; text-underline-offset: 3px; color: var(--text); }
 .dept-card {
   border: 1px solid var(--line-dark); border-radius: 12px; padding: 26px 14px 22px; text-align: center; background: transparent;
   transition: all .25s; display: flex; flex-direction: column; align-items: center; min-height: 190px;
@@ -287,7 +292,7 @@ p { margin: 0 0 1em; }
 .site-footer { background: var(--band-soft); color: #555; padding: 60px 0 36px; font-size: 13.5px; border-top: 1px solid var(--line); }
 .footer-brand { text-align: center; margin-bottom: 44px; }
 .footer-brand img { width: 62px; margin: 0 auto 10px; opacity: .9; }
-.footer-brand .wm { font-family: var(--serif); font-size: 22px; font-weight: 600; color: var(--text); letter-spacing: .02em; }
+.footer-brand .wm { font-family: var(--logo); font-size: 24px; font-weight: 300; color: #222; letter-spacing: -.01em; }
 .footer-brand .en { display: block; font-family: var(--eng); font-size: 9.5px; letter-spacing: .22em; color: var(--muted); margin-top: 4px; }
 .footer-grid { display: grid; grid-template-columns: 1.6fr 1.2fr 1fr 1fr; gap: 36px; }
 .site-footer h4 { color: var(--text); font-size: 15px; margin-bottom: 14px; font-weight: 700; }
@@ -348,7 +353,7 @@ p { margin: 0 0 1em; }
 }
 @media (max-width: 1180px) {
   .gnb-menu > li > a { padding: 33px 9px; font-size: 14px; }
-  .dept-grid { grid-template-columns: repeat(3, 1fr); }
+  .dept-grid, .dept-grid.cols-4 { grid-template-columns: repeat(3, 1fr); }
   .director { grid-template-columns: 340px 1fr; gap: 30px; }
   .case-grid, .review-grid { grid-template-columns: repeat(3, 1fr); }
   .doctor-section { grid-template-columns: 300px 1fr; gap: 36px; }
@@ -406,7 +411,7 @@ p { margin: 0 0 1em; }
   .hero-content br { display: none; }
   .pill-row, .strip-notice, .hours-rows { padding-left: 0; }
   .info-strip { padding: 50px 0 40px; }
-  .dept-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .dept-grid, .dept-grid.cols-3, .dept-grid.cols-4 { grid-template-columns: 1fr 1fr; gap: 10px; }
   .dept-card { min-height: 150px; padding: 20px 10px 16px; }
   .dept-card h3 { font-size: 17px; }
   .dept-card .tags { font-size: 11.5px; }
