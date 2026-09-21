@@ -1,0 +1,18 @@
+# 예약 발행 스케줄러 — 배포: 이 폴더에서  npx wrangler deploy
+# 비밀값: npx wrangler secret put DEPLOY_HOOK   (Pages 프로젝트 sw-bareul 의 배포 훅 주소)
+name = "sw-bareul-scheduler"
+main = "worker.js"
+compatibility_date = "2026-09-01"
+account_id = "6b457196c44a2edd385a645067952643"
+workers_dev = false
+preview_urls = false
+
+[vars]
+SITE_URL = "https://www.sw-bareul.co.kr"
+
+# UTC 기준. 00:05 = 한국 09:05, 03:05 = 한국 12:05 (첫 시도가 실패했을 때의 재시도)
+[triggers]
+crons = ["5 0 * * *", "5 3 * * *"]
+
+[observability]
+enabled = true

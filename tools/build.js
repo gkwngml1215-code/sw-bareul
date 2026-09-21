@@ -23,12 +23,13 @@ console.log(`홈페이지 설정 반영: 바뀐 파일 ${applied.changed}개`);
 
 const imported = R.importExisting();
 const published = R.rebuildAll();
-console.log(`게시글: 공개 ${published}편` + (imported ? ` (가져온 글 ${imported}편)` : ""));
+const scheduledN = R.listPosts().filter(R.isScheduled).length;
+console.log(`게시글: 공개 ${published}편` + (scheduledN ? ` · 예약 ${scheduledN}편 (다음 ${R.nextScheduled()})` : "") + (imported ? ` (가져온 글 ${imported}편)` : ""));
 
 execFileSync(process.execPath, [path.join(__dirname, "seo-inject.js")], { cwd: ROOT, stdio: "inherit" });
 
 const commit = process.env.CF_PAGES_COMMIT_SHA || process.env.COMMIT_REF || "";
-fs.writeFileSync(path.join(ROOT, "build-info.json"), JSON.stringify({ commit, builtAt: new Date().toISOString(), branch: process.env.CF_PAGES_BRANCH || "" }, null, 2));
+fs.writeFileSync(path.join(ROOT, "build-info.json"), JSON.stringify({ commit, builtAt: new Date().toISOString(), branch: process.env.CF_PAGES_BRANCH || "", nextScheduled: R.nextScheduled() }, null, 2));
 
 // 공개 제외 목록 (저장소 루트 기준)
 const EXCLUDE = new Set(["tools", "admin", "dist", "node_modules", ".git", ".gitignore", ".node-version", "site.json", "README.md", "배포가이드.md", "구현가이드.md", "구현가이드.html", "package.json", "package-lock.json"]);

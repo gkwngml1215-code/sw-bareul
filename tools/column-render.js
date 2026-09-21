@@ -42,6 +42,23 @@ function readingMinutes(html) {
   const chars = textOf(html).replace(/\s/g, "").length;
   return Math.max(1, Math.round(chars / 500));
 }
+// ---------- 예약 발행 ----------
+// 상태가 "공개" 라도 발행일이 아직 오지 않은 글은 홈페이지에 내보내지 않습니다 (한국 시간 기준).
+// 그날이 되면 tools/scheduler-worker 가 Cloudflare 에 다시 빌드를 요청해서 공개됩니다.
+function todayKST() {
+  return new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
+}
+function isLive(post) {
+  return post.status !== "draft" && String(post.published || "") <= todayKST();
+}
+function isScheduled(post) {
+  return post.status !== "draft" && !isLive(post);
+}
+// 가장 가까운 예약 날짜 (없으면 "") — build-info.json 에 기록
+function nextScheduled() {
+  return listPosts().filter(isScheduled).map((p) => p.published).sort()[0] || "";
+}
+
 const slugOfCategory = (cat) => CATEGORY_SLUGS[cat] || "column";
 // 목록 형태: 사례·후기는 사진 위주 갤러리, 공지는 줄 목록, 나머지는 카드
 function layoutOfCategory(cat) {
@@ -253,7 +270,7 @@ function replaceBlock(html, cards) {
 // 전체 목록 페이지(index.html)의 <!-- posts:start --> ~ <!-- posts:end --> 사이를 다시 씀
 // + 카테고리별 목록 페이지(column.html / cases.html / reviews.html / press.html / notice.html)를 _category.html 로 생성
 function rebuildIndex(posts) {
-  const published = posts.filter((p) => p.status !== "draft");
+  const published = posts.filter(isLive);
   let html = fs.readFileSync(INDEX_FILE, "utf8");
   const cards = published.length ? published.map(renderCard).join("\n\n") : `      <p class="muted">아직 등록된 글이 없습니다.</p>`;
   fs.writeFileSync(INDEX_FILE, replaceBlock(html, cards));
@@ -283,15 +300,15 @@ function rebuildIndex(posts) {
 // 공개 글 전체 HTML 재생성 (이전/다음 링크 때문에 하나가 바뀌면 이웃도 갱신 — 같은 카테고리 안에서 이동)
 function rebuildAll() {
   const posts = listPosts();
-  const published = posts.filter((p) => p.status !== "draft");
+  const published = posts.filter(isLive);
   published.forEach((p) => {
     const same = published.filter((x) => x.category === p.category);
     const i = same.indexOf(p);
     const neighbors = { prev: same[i + 1], next: same[i - 1] }; // 목록은 최신순
     fs.writeFileSync(path.join(COLUMNS_DIR, p.slug + ".html"), renderPost(p, neighbors));
   });
-  // 임시저장 글의 html 은 지움
-  posts.filter((p) => p.status === "draft").forEach((p) => {
+  // 임시저장·예약 글의 html 은 지움
+  posts.filter((p) => !isLive(p)).forEach((p) => {
     const f = path.join(COLUMNS_DIR, p.slug + ".html");
     if (fs.existsSync(f)) fs.unlinkSync(f);
   });
@@ -351,4 +368,4 @@ function importExisting() {
   return n;
 }
 
-module.exports = { CATEGORIES, CATEGORY_SLUGS, DEFAULT_AUTHOR, listPosts, readPost, writePost, deletePost, renderPost, rebuildAll, rebuildIndex, importExisting, readingMinutes, COLUMNS_DIR, DATA_DIR, ROOT };
+module.exports = { todayKST, isLive, isScheduled, nextScheduled, CATEGORIES, CATEGORY_SLUGS, DEFAULT_AUTHOR, listPosts, readPost, writePost, deletePost, renderPost, rebuildAll, rebuildIndex, importExisting, readingMinutes, COLUMNS_DIR, DATA_DIR, ROOT };
