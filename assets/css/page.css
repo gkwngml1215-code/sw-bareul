@@ -483,3 +483,14 @@ article.post { max-width: 860px; margin: 0 auto; padding-top: 70px; }
   .quote-band { font-size: 19px; }
   .ba-grid { gap: 8px; }
 }
+
+/* GEO 칼럼 작성원칙 — 핵심 답변 · 비교표 제목 · 감수 원장 박스 · 최종 수정일 */
+.summary-box .summary-title { font-size: 16px; font-weight: 700; margin: 0 0 10px; letter-spacing: .04em; }
+.post-body table caption { caption-side: top; text-align: left; font-weight: 700; padding-bottom: 8px; }
+.post-body .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.geo-reviewer { align-items: flex-start; }
+.geo-reviewer .geo-reviewer-label { font-size: 12px; font-weight: 700; letter-spacing: .12em; opacity: .7; margin: 0 0 4px; }
+.geo-reviewer h3 span { font-size: 13px; font-weight: 500; opacity: .75; }
+.geo-reviewer p + p { margin-top: 6px; }
+.geo-reviewer .geo-reviewer-note { font-size: 13px; }
+.geo-modified { margin-top: 14px; text-align: right; font-size: 13px; opacity: .75; }

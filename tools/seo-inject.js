@@ -22,6 +22,7 @@ const SITE_URL = (process.env.URL || process.env.SITE_URL || CFG.siteUrl || "htt
 // 예전 도메인 — 페이지 안에 남아 있으면 현재 주소로 바꿈
 const OLD_URLS = ["https://danaan-sw.com", "http://danaan-sw.com", "https://www.bareuljung.co.kr"];
 const { execFileSync } = require("child_process");
+const REVIEWER = require("./geo-column").GEO.reviewer || {};
 
 // 페이지별 keywords (네이버용). 게시글은 어드민 입력값을 씀
 const KEYWORDS = {
@@ -188,7 +189,12 @@ function extract(html, file) {
           const s = pick(html, /<section class="summary-box"[\s\S]*?<ul>([\s\S]*?)<\/ul>/i);
           return s ? s.split(/<\/li>/).map(text).filter(Boolean) : [];
         })(),
-        body: text(pick(html, /<div class="post-body">([\s\S]*?)(?:<p class="ba-note">|<div class="author-box">)/i))
+        body: text(pick(html, /<div class="post-body">([\s\S]*?)(?:<p class="ba-note">|<div class="author-box">|<aside class="author-box)/i)),
+        // 참고자료 링크 → 구조화 데이터 citation
+        citations: (() => {
+          const sec = pick(html, /<section class="references"[^>]*>([\s\S]*?)<\/section>/i);
+          return [...String(sec || "").matchAll(/<a href="(https?:[^"]+)"[^>]*>([\s\S]*?)<\/a>/gi)].map((m) => ({ "@type": "CreativeWork", name: text(m[2]), url: m[1] }));
+        })()
       }
     : null;
 
@@ -342,6 +348,8 @@ function buildJsonLd(info, file, url) {
       mainEntityOfPage: { "@id": url + "#webpage" },
       inLanguage: "ko-KR",
       wordCount: a.body.replace(/\s+/g, "").length,
+      ...(a.citations && a.citations.length ? { citation: a.citations } : {}),
+      ...(/class="geo-reviewer"/.test(fs.readFileSync(file, "utf8")) ? { reviewedBy: { "@type": "Physician", name: REVIEWER.name, jobTitle: `${REVIEWER.title || "대표원장"} · ${REVIEWER.license || "한의사"}`, worksFor: { "@id": SITE_URL + "/#clinic" } } } : {}),
       isAccessibleForFree: true,
       speakable: { "@type": "SpeakableSpecification", cssSelector: [".summary-box", ".key-answer"] }
     });

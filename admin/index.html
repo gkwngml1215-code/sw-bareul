@@ -337,11 +337,11 @@
         <div class="form">
           <div class="row">
             <label>글 주소 (슬러그)<small>영문 소문자·숫자·하이픈. 비우면 자동 생성. 공개 후 바꾸면 주소가 바뀝니다</small></label>
-            <div class="field"><div class="inline"><span class="fixed" style="color:var(--muted)">/pages/columns/</span><input type="text" id="f_slug" placeholder="2026-10-01-sudden-hearing-loss-golden-time"></div></div>
+            <div class="field"><div class="inline"><span class="fixed" style="color:var(--muted)">/pages/columns/</span><input type="text" id="f_slug" placeholder="sudden-hearing-loss-golden-time (날짜 없이)"></div></div>
           </div>
           <div class="row">
             <label>발행일</label>
-            <div class="field"><div class="inline"><input type="date" id="f_published"><span class="fixed" style="color:var(--muted)">수정일은 저장할 때 오늘 날짜로 자동 기록</span></div><div class="hint"><span>📅 <b>예약 발행</b>: 발행일을 미래 날짜로 두고 "저장하고 공개"를 누르면, 그날 오전 9시쯤 자동으로 공개됩니다</span></div></div>
+            <div class="field"><div class="inline"><input type="date" id="f_published"><span class="fixed" style="color:var(--muted)">수정일은 저장할 때 오늘 날짜로 자동 기록</span></div><div class="hint"><span>📅 발행일은 <b>오늘 또는 지난 날짜만</b> 됩니다. 미래 날짜 예약 발행은 쓰지 않습니다 (홈페이지에 예약 흔적이 남지 않도록 — 공개할 날 저장하세요)</span></div></div>
           </div>
           <div class="row">
             <label>짧은 제목<small>경로 표시(홈 &gt; 원장칼럼 &gt; …)에 쓰는 20자 내외 제목</small></label>
@@ -683,7 +683,7 @@ const gh = {
   },
   async save(b) {
     validate(b);
-    const slug = safeSlug(b.slug) || `${b.published}-column-${Date.now().toString(36).slice(-4)}`;
+    const slug = safeSlug(b.slug) || `column-${Date.now().toString(36).slice(-6)}`; // 주소에 날짜를 넣지 않음
     const existing = b.originalSlug ? await this.get(b.originalSlug).catch(() => null) : null;
     // 새 주소(slug)가 저장소에 이미 있는 글과 겹치면 멈춤 (다른 글을 덮어쓰지 않도록)
     if (!existing || existing.slug !== slug) {
@@ -917,7 +917,7 @@ async function loadPost(slug) {
     $("f_title").value = p.title; $("f_author").value = p.author || meta.author; $("f_category").value = p.category;
     $("f_description").value = p.description; $("f_keywords").value = p.keywords || ""; $("f_schema").value = p.schema || "";
     $("content").innerHTML = p.content || ""; $("f_thumbAlt").value = p.thumbnailAlt || "";
-    $("f_summary").value = (p.summary || []).join("\n"); $("f_references").value = (p.references || []).join("\n");
+    $("f_summary").value = (p.summary || []).join("\n"); $("f_references").value = (p.references || []).map((x) => typeof x === "string" ? x : `<a href="${x.url}" target="_blank" rel="noopener nofollow">${x.source}${x.title && x.title !== x.source ? " — " + x.title : ""}</a>`).join("\n");
     $("f_slug").value = p.slug; $("f_published").value = p.published; $("f_shortTitle").value = p.shortTitle || "";
     $("faqRows").innerHTML = ""; (p.faqs && p.faqs.length ? p.faqs : [{}, {}, {}]).forEach((f) => addFaq(f.q, f.a));
     if (p.thumbnail) { thumbPath = p.thumbnail; $("thumbPreview").innerHTML = `<img src="${siteHref(p.thumbnail)}" alt="">`; $("thumbName").textContent = p.thumbnail.split("/").pop(); }
@@ -998,6 +998,10 @@ async function save(status) {
   $("saveMsg").textContent = "저장 중…";
   try {
     const data = collect(status);
+    // 예약 발행 금지: 미래 날짜로 공개하면 원본에 예약 흔적이 남고, 자동 공개도 더 이상 하지 않음
+    if (status !== "draft" && data.published && data.published > today()) {
+      throw new Error(`발행일(${data.published})이 미래입니다. 예약 발행은 쓰지 않습니다 — 공개할 날 저장하거나, 지금은 "임시저장" 하세요.`);
+    }
     if (backend === localBackend) delete data.thumbnailFile;
     if (backend === gh) {
       // 발행 전 확인 단계: 무엇이 어떻게 올라가는지 보여주고 동의를 받음

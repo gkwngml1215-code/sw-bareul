@@ -1,0 +1,257 @@
+{
+  "about": "검증된 참고자료 주소 (2026-10-21 확인). GEO 칼럼 참고자료 3개 = 국내(slot kr) 1 + 해외 임상자료(slot intl: MSD 매뉴얼/Mayo Clinic) 1 + NHS(slot nhs) 1.",
+  "references": [
+    {
+      "topic": "구안와사(벨마비)",
+      "source": "국가건강정보포털(질병관리청)",
+      "slot": "kr",
+      "title": "얼굴마비(말초성 마비)",
+      "url": "https://health.kdca.go.kr/healthinfo/biz/health/gnrlzHealthInfo/gnrlzHealthInfo/gnrlzHealthInfoView.do?cntnts_sn=3790"
+    },
+    {
+      "topic": "구안와사(벨마비)",
+      "source": "서울대학교병원",
+      "slot": "kr",
+      "title": "안면마비",
+      "url": "https://www.snuh.org/health/nMedInfo/nView.do?category=DIS&medid=AA001298"
+    },
+    {
+      "topic": "구안와사(벨마비)",
+      "source": "MSD 매뉴얼",
+      "slot": "intl",
+      "title": "Bell Palsy - MSD Manual Consumer Version",
+      "url": "https://www.msdmanuals.com/home/brain-spinal-cord-and-nerve-disorders/cranial-nerve-disorders/bell-palsy"
+    },
+    {
+      "topic": "구안와사(벨마비)",
+      "source": "NHS",
+      "slot": "nhs",
+      "title": "Bell's palsy",
+      "url": "https://www.nhs.uk/conditions/bells-palsy/"
+    },
+    {
+      "topic": "람세이헌트 증후군",
+      "source": "서울대학교병원",
+      "slot": "kr",
+      "title": "안면 신경마비",
+      "url": "https://www.snuh.org/health/nMedInfo/nView.do?medid=AC000031"
+    },
+    {
+      "topic": "람세이헌트 증후군",
+      "source": "MSD 매뉴얼",
+      "slot": "intl",
+      "title": "Herpes Zoster Oticus (Ramsay Hunt Syndrome) - MSD Manual Consumer Version",
+      "url": "https://www.msdmanuals.com/home/ear-nose-and-throat-disorders/inner-ear-disorders/herpes-zoster-oticus"
+    },
+    {
+      "topic": "람세이헌트 증후군",
+      "source": "Mayo Clinic",
+      "slot": "intl",
+      "title": "Ramsay Hunt syndrome - Symptoms and causes",
+      "url": "https://www.mayoclinic.org/diseases-conditions/ramsay-hunt-syndrome/symptoms-causes/syc-20351783"
+    },
+    {
+      "topic": "람세이헌트 증후군",
+      "source": "NHS",
+      "slot": "nhs",
+      "title": "Shingles",
+      "url": "https://www.nhs.uk/conditions/shingles/"
+    },
+    {
+      "topic": "안면마비 후유증·연합운동",
+      "source": "국가건강정보포털(질병관리청)",
+      "slot": "kr",
+      "title": "얼굴마비(말초성 마비)",
+      "url": "https://health.kdca.go.kr/healthinfo/biz/health/gnrlzHealthInfo/gnrlzHealthInfo/gnrlzHealthInfoView.do?cntnts_sn=3790"
+    },
+    {
+      "topic": "안면마비 후유증·연합운동",
+      "source": "Mayo Clinic",
+      "slot": "intl",
+      "title": "Bell's palsy - Symptoms and causes",
+      "url": "https://www.mayoclinic.org/diseases-conditions/bells-palsy/symptoms-causes/syc-20370028"
+    },
+    {
+      "topic": "안면마비 후유증·연합운동",
+      "source": "NHS 111 Wales",
+      "slot": "nhs",
+      "title": "Health A-Z: Facial Palsy",
+      "url": "https://111.wales.nhs.uk/encyclopaedia/f/article/facialpalsy"
+    },
+    {
+      "topic": "이명",
+      "source": "국가건강정보포털(질병관리청)",
+      "slot": "kr",
+      "title": "이명",
+      "url": "https://health.kdca.go.kr/healthinfo/biz/health/gnrlzHealthInfo/gnrlzHealthInfo/gnrlzHealthInfoView.do?cntnts_sn=5706"
+    },
+    {
+      "topic": "이명",
+      "source": "서울대학교병원",
+      "slot": "kr",
+      "title": "이명",
+      "url": "https://www.snuh.org/health/nMedInfo/nView.do?category=DIS&medid=AC000034"
+    },
+    {
+      "topic": "이명",
+      "source": "MSD 매뉴얼",
+      "slot": "intl",
+      "title": "Ear Ringing or Buzzing - MSD Manual Consumer Version",
+      "url": "https://www.msdmanuals.com/home/ear-nose-and-throat-disorders/symptoms-of-ear-disorders/ear-ringing-or-buzzing"
+    },
+    {
+      "topic": "이명",
+      "source": "NHS",
+      "slot": "nhs",
+      "title": "Tinnitus",
+      "url": "https://www.nhs.uk/conditions/tinnitus/"
+    },
+    {
+      "topic": "돌발성 난청",
+      "source": "서울대학교병원",
+      "slot": "kr",
+      "title": "돌발성 난청",
+      "url": "https://www.snuh.org/health/nMedInfo/nView.do?category=DIS&medid=AA000724"
+    },
+    {
+      "topic": "돌발성 난청",
+      "source": "MSD 매뉴얼",
+      "slot": "intl",
+      "title": "Sudden Hearing Loss - MSD Manual Consumer Version",
+      "url": "https://www.msdmanuals.com/home/ear-nose-and-throat-disorders/hearing-loss-and-deafness/sudden-hearing-loss"
+    },
+    {
+      "topic": "돌발성 난청",
+      "source": "NHS",
+      "slot": "nhs",
+      "title": "Hearing loss",
+      "url": "https://www.nhs.uk/conditions/hearing-loss/"
+    },
+    {
+      "topic": "돌발성 난청",
+      "source": "NHS (Hull University Teaching Hospitals)",
+      "slot": "nhs",
+      "title": "Sudden Sensorineural Hearing Loss (SSNHL)",
+      "url": "https://www.hey.nhs.uk/patient-leaflet/sudden-sensorineural-hearing-loss-ssnhl/"
+    },
+    {
+      "topic": "메니에르병",
+      "source": "국가건강정보포털(질병관리청)",
+      "slot": "kr",
+      "title": "메니에르병",
+      "url": "https://health.kdca.go.kr/healthinfo/biz/health/gnrlzHealthInfo/gnrlzHealthInfo/gnrlzHealthInfoView.do?cntnts_sn=5964"
+    },
+    {
+      "topic": "메니에르병",
+      "source": "서울대학교병원",
+      "slot": "kr",
+      "title": "메니에르병",
+      "url": "https://www.snuh.org/health/nMedInfo/nView.do?medid=AA000172"
+    },
+    {
+      "topic": "메니에르병",
+      "source": "MSD 매뉴얼",
+      "slot": "intl",
+      "title": "Meniere Disease - MSD Manual Consumer Version",
+      "url": "https://www.msdmanuals.com/home/ear-nose-and-throat-disorders/inner-ear-disorders/meniere-disease"
+    },
+    {
+      "topic": "메니에르병",
+      "source": "NHS",
+      "slot": "nhs",
+      "title": "Ménière's disease",
+      "url": "https://www.nhs.uk/conditions/menieres-disease/"
+    },
+    {
+      "topic": "이석증",
+      "source": "서울아산병원",
+      "slot": "kr",
+      "title": "이석증(Benign paroxysmal vertigo)",
+      "url": "https://www.amc.seoul.kr/asan/healthinfo/disease/diseaseDetail.do?contentId=32429"
+    },
+    {
+      "topic": "이석증",
+      "source": "국가건강정보포털(질병관리청)",
+      "slot": "kr",
+      "title": "어지럼",
+      "url": "https://health.kdca.go.kr/healthinfo/biz/health/gnrlzHealthInfo/gnrlzHealthInfo/gnrlzHealthInfoView.do?cntnts_sn=6550"
+    },
+    {
+      "topic": "이석증",
+      "source": "MSD 매뉴얼",
+      "slot": "intl",
+      "title": "Benign Paroxysmal Positional Vertigo - MSD Manual Consumer Version",
+      "url": "https://www.msdmanuals.com/home/ear-nose-and-throat-disorders/inner-ear-disorders/benign-paroxysmal-positional-vertigo"
+    },
+    {
+      "topic": "이석증",
+      "source": "NHS",
+      "slot": "nhs",
+      "title": "Vertigo",
+      "url": "https://www.nhs.uk/conditions/vertigo/"
+    },
+    {
+      "topic": "안면경련",
+      "source": "MSD 매뉴얼",
+      "slot": "intl",
+      "title": "Hemifacial Spasm - MSD Manual Consumer Version",
+      "url": "https://www.msdmanuals.com/home/brain-spinal-cord-and-nerve-disorders/cranial-nerve-disorders/hemifacial-spasm"
+    },
+    {
+      "topic": "안면경련",
+      "source": "Mayo Clinic",
+      "slot": "intl",
+      "title": "Hemifacial spasm - Diagnosis and treatment",
+      "url": "https://www.mayoclinic.org/diseases-conditions/hemifacial-spasm/diagnosis-treatment/drc-20373299"
+    },
+    {
+      "topic": "안면경련",
+      "source": "NHS (Guy's and St Thomas')",
+      "slot": "nhs",
+      "title": "Blepharospasm and hemifacial spasm - Overview",
+      "url": "https://www.guysandstthomas.nhs.uk/health-information/blepharospasm-and-hemifacial-spasm"
+    },
+    {
+      "topic": "삼차신경통",
+      "source": "서울대학교병원",
+      "slot": "kr",
+      "title": "삼차신경통",
+      "url": "https://www.snuh.org/health/nMedInfo/nView.do?category=DIS&medid=AA001213"
+    },
+    {
+      "topic": "삼차신경통",
+      "source": "MSD 매뉴얼",
+      "slot": "intl",
+      "title": "Trigeminal Neuralgia - MSD Manual Consumer Version",
+      "url": "https://www.msdmanuals.com/home/brain-spinal-cord-and-nerve-disorders/cranial-nerve-disorders/trigeminal-neuralgia"
+    },
+    {
+      "topic": "삼차신경통",
+      "source": "NHS",
+      "slot": "nhs",
+      "title": "Trigeminal neuralgia",
+      "url": "https://www.nhs.uk/conditions/trigeminal-neuralgia/"
+    },
+    {
+      "topic": "교통사고 후 목 손상(편타손상)",
+      "source": "서울대학교병원",
+      "slot": "kr",
+      "title": "경부통증",
+      "url": "https://www.snuh.org/health/nMedInfo/nView.do?medid=AA001385"
+    },
+    {
+      "topic": "교통사고 후 목 손상(편타손상)",
+      "source": "Mayo Clinic",
+      "slot": "intl",
+      "title": "Whiplash - Symptoms and causes",
+      "url": "https://www.mayoclinic.org/diseases-conditions/whiplash/symptoms-causes/syc-20378921"
+    },
+    {
+      "topic": "교통사고 후 목 손상(편타손상)",
+      "source": "NHS",
+      "slot": "nhs",
+      "title": "Whiplash",
+      "url": "https://www.nhs.uk/conditions/whiplash/"
+    }
+  ]
+}

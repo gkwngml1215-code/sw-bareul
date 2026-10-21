@@ -8,7 +8,10 @@ node_modules/
 Thumbs.db
 
 # 게시글 HTML 과 카테고리 목록은 빌드 때 JSON 에서 생성되므로 저장소에 넣지 않음 (index.html · _template.html · _category.html 은 유지)
-pages/columns/20*.html
+pages/columns/*.html
+!pages/columns/index.html
+!pages/columns/_template.html
+!pages/columns/_category.html
 pages/columns/column.html
 pages/columns/cases.html
 pages/columns/reviews.html

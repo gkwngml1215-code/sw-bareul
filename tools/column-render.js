@@ -5,6 +5,7 @@
  */
 const fs = require("fs");
 const path = require("path");
+const GEOC = require("./geo-column");
 
 const ROOT = path.resolve(__dirname, "..");
 const COLUMNS_DIR = path.join(ROOT, "pages", "columns");
@@ -118,11 +119,15 @@ function processContent(html) {
 
 // ---------- HTML 렌더 ----------
 function renderPost(post, neighbors) {
-  const { html: body, toc } = processContent(post.content);
+  const processed = processContent(post.content);
+  const toc = processed.toc;
+  // 비교표는 모바일에서 가로로 밀어 볼 수 있게 감싼다
+  const body = processed.html.replace(/<table\b[\s\S]*?<\/table>/gi, (t) => `<div class="table-wrap">${t}</div>`);
   const thumb = post.thumbnail || DEFAULT_THUMB;
   const summary = (post.summary || []).filter(Boolean);
   const faqs = (post.faqs || []).filter((f) => f.q && f.a);
-  const refs = (post.references || []).filter(Boolean).map(cleanLinks);
+  const refs = GEOC.refItems(post.references).map(cleanLinks);
+  const modified = GEOC.effectiveModified(post);
   const minutes = post.readingMinutes || readingMinutes(post.content);
   const prev = neighbors && neighbors.prev;
   const next = neighbors && neighbors.next;
@@ -152,7 +157,7 @@ ${customSchema ? `<script type="application/ld+json" data-custom-schema>${custom
 
 <div class="page-body">
   <div class="container">
-    <article class="post" data-category="${esc(post.category)}" data-published="${esc(post.published)}" data-modified="${esc(post.modified || post.published)}" data-image="${esc(thumb)}">
+    <article class="post" data-category="${esc(post.category)}" data-published="${esc(post.published)}" data-modified="${esc(modified)}" data-image="${esc(thumb)}">
 
       <header class="post-head">
         <div class="breadcrumb" style="color:var(--muted);opacity:1"><a href="/">홈</a> &gt; <a href="/pages/columns/">상담 · 후기</a> &gt; <a href="${catUrl}">${esc(post.category)}</a> &gt; ${esc(breadcrumbShort)}</div>
@@ -161,14 +166,13 @@ ${customSchema ? `<script type="application/ld+json" data-custom-schema>${custom
         <div class="post-meta">
           <span class="author"><img src="${AUTHOR_IMG}" alt="${esc(post.author || DEFAULT_AUTHOR)}">${esc(post.author || DEFAULT_AUTHOR)}</span>
           <span>발행 <time datetime="${esc(post.published)}">${fmtDate(post.published)}</time></span>
-          ${post.modified && post.modified !== post.published ? `<span>수정 <time datetime="${esc(post.modified)}">${fmtDate(post.modified)}</time></span>` : ""}
           ${isArticle ? `<span>읽는 시간 약 ${minutes}분</span>` : ""}
         </div>
       </header>
 
 ${showHero ? `      <div class="post-hero"><img src="${esc(thumb)}" alt="${esc(post.thumbnailAlt || post.title)}"></div>\n` : ""}
-${summary.length ? `      <section class="summary-box" aria-label="핵심 요약">
-        <h2>핵심 요약</h2>
+${summary.length ? `      <section class="summary-box" aria-label="핵심 답변">
+        <p class="summary-title">핵심 답변</p>
         <ul>
 ${summary.map((s) => `          <li>${s}</li>`).join("\n")}
         </ul>
@@ -178,37 +182,38 @@ ${toc.length > 1 ? `      <nav class="toc" aria-label="목차">
         <strong>목차</strong>
         <ol>
 ${toc.map((t) => `          <li><a href="#${t.id}">${esc(t.text)}</a></li>`).join("\n")}
-${faqs.length ? `          <li><a href="#faq">자주 묻는 질문</a></li>` : ""}
+${refs.length ? `          <li><a href="#refs">${GEOC.REF_SECTION}</a></li>` : ""}
+${faqs.length ? `          <li><a href="#faq">${GEOC.FAQ_SECTION}</a></li>` : ""}
         </ol>
       </nav>
 ` : ""}
       <div class="post-body">
 ${body}
-${faqs.length ? `
-        <h2 id="faq">자주 묻는 질문</h2>
-        <div class="faq">
-${faqs.map((f) => `          <details><summary>${esc(f.q)}</summary><div class="a">${esc(f.a)}</div></details>`).join("\n")}
-        </div>
-` : ""}
 ${refs.length ? `
-        <section class="references">
-          <h2>참고 자료</h2>
+        <section class="references" id="refs">
+          <h2>${GEOC.REF_SECTION}</h2>
           <ol>
 ${refs.map((r) => `            <li>${r}</li>`).join("\n")}
           </ol>
         </section>
 ` : ""}
+${faqs.length ? `
+        <h2 id="faq">${GEOC.FAQ_SECTION}</h2>
+        <div class="faq">
+${faqs.map((f) => `          <details><summary>${esc(f.q)}</summary><div class="a">${esc(f.a)}</div></details>`).join("\n")}
+        </div>
+` : ""}
       </div>
 
 ${catSlug === "cases" || catSlug === "reviews" ? `      <p class="ba-note">* 시술 전 · 후 동일인으로, 시술 당사자로부터 사전 동의를 받고 게시하는 자료입니다. 치료 효과와 기간은 개인의 상태에 따라 다를 수 있습니다.</p>\n` : ""}
-      <div class="author-box">
+${catSlug === "column" ? GEOC.reviewerHtml(post) + "\n" : `      <div class="author-box">
         <img src="${AUTHOR_IMG}" alt="${esc(SITE_NAME)}">
         <div>
           <h3>글쓴이 · ${esc(post.author || DEFAULT_AUTHOR)}</h3>
           <p>한방 안이비인후피부과 전문의 오민지 원장, 한방내과 전문의 이진혁 · 김도경 원장, 한방소아청소년과 전문의 이주현 원장(한의학 박사)이 함께 진료하는 수원 인계동 한의원. 이명 · 난청 · 구안와사 · 어지럼증 입원 집중치료. <a href="/pages/about/doctor">의료진 소개 보기</a></p>
         </div>
       </div>
-
+`}
       <div class="post-nav">
         ${prev ? `<a href="/pages/columns/${esc(prev.slug)}"><span>이전 글</span>${esc(prev.title)}</a>` : `<a href="${catUrl}"><span>목록</span>${esc(post.category)} 전체 보기</a>`}
         ${next ? `<a href="/pages/columns/${esc(next.slug)}" class="next"><span>다음 글</span>${esc(next.title)}</a>` : `<a href="${catUrl}" class="next"><span>목록</span>${esc(post.category)} 전체 보기</a>`}

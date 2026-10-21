@@ -29,7 +29,8 @@ console.log(`게시글: 공개 ${published}편` + (scheduledN ? ` · 예약 ${sc
 execFileSync(process.execPath, [path.join(__dirname, "seo-inject.js")], { cwd: ROOT, stdio: "inherit" });
 
 const commit = process.env.CF_PAGES_COMMIT_SHA || process.env.COMMIT_REF || "";
-fs.writeFileSync(path.join(ROOT, "build-info.json"), JSON.stringify({ commit, builtAt: new Date().toISOString(), branch: process.env.CF_PAGES_BRANCH || "", nextScheduled: R.nextScheduled() }, null, 2));
+// build-info.json 은 공개 파일이라 예약 날짜 같은 내부 정보는 넣지 않는다
+fs.writeFileSync(path.join(ROOT, "build-info.json"), JSON.stringify({ commit, builtAt: new Date().toISOString(), branch: process.env.CF_PAGES_BRANCH || "" }, null, 2));
 
 // 공개 제외 목록 (저장소 루트 기준)
 const EXCLUDE = new Set(["칼럼", "tools", "admin", "dist", "node_modules", ".git", ".gitignore", ".node-version", "site.json", "README.md", "배포가이드.md", "구현가이드.md", "구현가이드.html", "package.json", "package-lock.json"]);
@@ -43,6 +44,9 @@ for (const e of fs.readdirSync(ROOT, { withFileTypes: true })) {
   if (EXCLUDE.has(e.name)) continue;
   fs.cpSync(path.join(ROOT, e.name), path.join(DIST, e.name), { recursive: true, filter: keep });
 }
+// 모든 공개 페이지의 사진 alt 에 지역 키워드를 넣는다 (GEO 작성원칙 — admin/config.json geo.region)
+const GEOC = require("./geo-column");
+console.log(`사진 alt 지역 키워드 보정: 바뀐 페이지 ${GEOC.enforceAltsInTree(DIST, GEOC.GEO.reviewer.clinic || "")}개`);
 const n = (function count(d) { return fs.readdirSync(d, { withFileTypes: true }).reduce((s, e) => s + (e.isDirectory() ? count(path.join(d, e.name)) : 1), 0); })(DIST);
 console.log(`dist/ 생성 완료 · 파일 ${n}개 · commit ${commit || "(로컬)"}`);
 console.log("빌드 완료");
