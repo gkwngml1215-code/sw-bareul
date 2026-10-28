@@ -14,6 +14,12 @@
  *
  *  이미지 원칙
  *    · 모든 <img alt> 에 지역 키워드(geo.region 중 하나)가 들어간다. 없으면 빌드 때 자동으로 앞에 붙인다.
+ *
+ *  제목 방식 (admin/config.json geo.titleStyle)
+ *    · "region-first"(기본, 울산): 제목 앞쪽에 지역 키워드 1회. 예) 울산 턱관절병원, …일까요?
+ *    · "main-keyword"(신림·수원): 제목은 메인 키워드(질환·주제)로 시작하고 지역을 제목 앞에 두지 않는다.
+ *      지역은 제목 끝 꼬리표 geo.clinicTag(예: [바를정한방병원 신림]) 또는 본문에 넣는다.
+ *      질문형 검사는 꼬리표를 뺀 앞부분으로 한다. 예) 구안와사 회복이 늦을 때 무엇을 확인해야 할까요? [바를정한방병원 신림]
  */
 const fs = require("fs");
 const path = require("path");
@@ -26,13 +32,18 @@ const FAQ_SECTION = "환자분들이 자주 묻는 질문은 무엇인가요?";
 // 의료법 제56조(의료광고) 위반 소지가 큰 표현 — 새 칼럼에서 발견되면 발행을 멈춘다
 const BANNED = ["완치", "100%", "부작용 없", "부작용이 없", "최고의", "유일한", "유일하게", "보장합니다", "확실하게 낫", "재발 없", "재발이 없", "흉터 없이", "통증 없이", "무통"];
 
+const flat = (s) => String(s == null ? "" : s).replace(/\s+/g, " ").trim();
+// 제목 끝의 [병원명 지역] 꼬리표를 뺀 본제목
+const titleCore = (s) => flat(s).replace(/\s*\[[^\]]*\]\s*$/, "");
 function loadGeo() {
   let cfg = {};
   try { cfg = JSON.parse(fs.readFileSync(path.join(ROOT, "admin", "config.json"), "utf8")).geo || {}; } catch (e) {}
   return {
     region: cfg.region || [],
     reviewer: cfg.reviewer || {},
-    referenceSources: cfg.referenceSources || []
+    referenceSources: cfg.referenceSources || [],
+    titleStyle: cfg.titleStyle === "main-keyword" ? "main-keyword" : "region-first",
+    clinicTag: flat(cfg.clinicTag || "")
   };
 }
 const GEO = loadGeo();
@@ -43,7 +54,6 @@ function esc(s) {
 function unesc(s) {
   return String(s == null ? "" : s).replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&nbsp;/g, " ").replace(/&amp;/g, "&");
 }
-const flat = (s) => String(s == null ? "" : s).replace(/\s+/g, " ").trim();
 const textOf = (html) => flat(unesc(String(html || "").replace(/<[^>]+>/g, " ")));
 const isQuestion = (s) => /\?\s*$/.test(textOf(s));
 function todayKST() {
@@ -141,8 +151,20 @@ function validateGeo(post) {
   const out = [];
   const title = flat(post.title);
   const content = String(post.content || "");
-  if (!isQuestion(title)) out.push("제목(H1)이 질문형(?로 끝남)이 아닙니다.");
-  if (GEO.region.length && !GEO.region.some((k) => title.includes(k))) out.push(`제목에 지역 키워드(${GEO.region.join("/")})가 없습니다.`);
+  const core = titleCore(title);
+  if (!isQuestion(core)) out.push("제목(H1)이 질문형(?로 끝남)이 아닙니다." + (core !== title ? " (끝의 [병원명 지역] 꼬리표는 빼고 봅니다)" : ""));
+  if (GEO.titleStyle === "main-keyword") {
+    // 메인 키워드 제목: 지역을 제목 앞에 두지 않는다. 지역은 꼬리표(clinicTag) 또는 본문에
+    const startsWithRegion = GEO.region.some((k) => core.startsWith(k));
+    if (startsWithRegion) out.push(`제목이 지역 키워드로 시작합니다 — 메인 키워드(질환·주제)로 시작하고, 지역은 제목 끝 ${GEO.clinicTag || "[병원명 지역]"} 꼬리표나 본문에 넣습니다.`);
+    const hasTag = !!GEO.clinicTag && title.endsWith(GEO.clinicTag);
+    const bracket = /\[[^\]]*\]\s*$/.exec(title);
+    if (bracket && !hasTag) out.push(`제목 끝 꼬리표는 정확히 ${GEO.clinicTag || "[병원명 지역]"} 로 씁니다 (지금: ${bracket[0]}).`);
+    const inBody = GEO.region.some((k) => textOf(content).includes(k));
+    if (!hasTag && !inBody) out.push(`지역 키워드(${GEO.region.join("/")})가 제목 끝 꼬리표에도 본문에도 없습니다.`);
+  } else if (GEO.region.length && !GEO.region.some((k) => title.includes(k))) {
+    out.push(`제목에 지역 키워드(${GEO.region.join("/")})가 없습니다.`);
+  }
   if (/\d{4}-?\d{2}-?\d{2}|20\d{2}/.test(post.slug || "")) out.push("주소(slug)에 날짜·연도가 들어 있습니다.");
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(post.slug || "")) out.push("주소(slug)는 영문 소문자·숫자·하이픈만 씁니다.");
   const h2 = [...content.matchAll(/<h2\b[^>]*>([\s\S]*?)<\/h2>/gi)].map((m) => textOf(m[1]));
@@ -181,7 +203,7 @@ function validateGeo(post) {
 
 module.exports = {
   FORMAT, RULES, REF_SECTION, FAQ_SECTION, BANNED, GEO,
-  esc, unesc, flat, textOf, isQuestion, todayKST, koDate, effectiveModified,
+  esc, unesc, flat, textOf, titleCore, isQuestion, todayKST, koDate, effectiveModified,
   regionAlt, enforceAlts, enforceAltsInTree, altsMissingRegion,
   refItems, refObjects, reviewerHtml, validateGeo
 };
