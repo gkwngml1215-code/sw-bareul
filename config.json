@@ -27,5 +27,26 @@
     "공지사항": "진료 안내, 연휴 진료 · 입원실 운영, 임상참관 수업 등 바를정한의원의 소식입니다."
   },
   "naverVerify": "",
-  "googleVerify": ""
+  "googleVerify": "",
+  "geo": {
+    "about": "GEO 칼럼 작성원칙 — region: 모든 사진 alt 에 들어갈 지역 키워드(첫 번째가 기본), titleStyle: main-keyword = 제목은 메인 키워드로 시작하고 지역은 제목 끝 꼬리표(clinicTag) 또는 본문에, reviewer: 칼럼 하단 감수 원장 박스, referenceSources: 참고자료 3개에 꼭 들어갈 출처",
+    "region": [
+      "수원",
+      "인계동"
+    ],
+    "titleStyle": "main-keyword",
+    "clinicTag": "[바를정한의원 수원]",
+    "reviewer": {
+      "clinic": "수원 바를정한의원",
+      "name": "이진혁",
+      "title": "대표원장",
+      "license": "한방내과 전문의",
+      "photo": "/assets/img/sub/info02_con1_2.jpg",
+      "url": "/pages/about/doctor",
+      "bio": "수원 바를정한의원 대표원장 · 한방내과 전문의. 강남자생한방병원 전문수련의 과정 수료, 前 강남자생한방병원 TA센터 진료원장. '구안와사 후유증 한방해결' 공동저자. 이명·돌발성 난청·어지럼증·구안와사 입원 집중치료를 진료합니다."
+    },
+    "referenceSources": [
+      "NHS"
+    ]
+  }
 }
