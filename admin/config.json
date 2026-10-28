@@ -29,11 +29,13 @@
   "naverVerify": "",
   "googleVerify": "",
   "geo": {
-    "about": "GEO 칼럼 작성원칙 — region: 모든 사진 alt·칼럼 제목에 들어갈 지역 키워드(첫 번째가 기본), reviewer: 칼럼 하단 감수 원장 박스, referenceSources: 참고자료 3개에 꼭 들어갈 출처",
+    "about": "GEO 칼럼 작성원칙 — region: 모든 사진 alt 에 들어갈 지역 키워드(첫 번째가 기본), titleStyle: main-keyword = 제목은 메인 키워드로 시작하고 지역은 제목 끝 꼬리표(clinicTag) 또는 본문에, reviewer: 칼럼 하단 감수 원장 박스, referenceSources: 참고자료 3개에 꼭 들어갈 출처",
     "region": [
       "수원",
       "인계동"
     ],
+    "titleStyle": "main-keyword",
+    "clinicTag": "[바를정한의원 수원]",
     "reviewer": {
       "clinic": "수원 바를정한의원",
       "name": "이진혁",
