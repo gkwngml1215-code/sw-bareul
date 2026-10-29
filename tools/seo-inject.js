@@ -90,7 +90,7 @@ const CLINIC = {
   founder: SC.doctor || "이진혁",
   foundingDate: "2014-01-01",
   logo: "/assets/img/logo/logo.png",
-  image: "/assets/img/main/mv1.jpg",
+  image: "/assets/img/og/og-square.jpg",   // 검색결과 썸네일용 정사각 (원본: /assets/img/main/mv1.jpg)
   hasMap: SCH.naverMap || "https://map.naver.com/p/entry/place/34778565",
   sameAs: [SCH.blog, SCH.naverMap, SCH.kakao, SCH.naverBooking, SCH.youtube, SCH.instagram, SCH.cafe].filter(Boolean),
   openingHours: [
@@ -359,6 +359,65 @@ function buildJsonLd(info, file, url) {
 }
 
 // ---------- 주입 ----------
+// ---------- 사진 (검색결과 썸네일 크기 태그 · 이미지 사이트맵) ----------
+function localFileOf(url) {
+  if (!url) return "";
+  const p = String(url).startsWith(SITE_URL) ? String(url).slice(SITE_URL.length) : /^https?:/.test(url) ? "" : String(url);
+  if (!p || !p.startsWith("/")) return "";
+  return path.join(ROOT, decodeURIComponent(p.split(/[?#]/)[0]).split("/").join(path.sep));
+}
+// JPEG·PNG·WebP 머리글에서 가로·세로를 읽는다 (외부 라이브러리 없이)
+function imageSize(url) {
+  const f = localFileOf(url);
+  if (!f) return null;
+  try {
+    const b = fs.readFileSync(f);
+    if (b.length > 24 && b.toString("ascii", 1, 4) === "PNG") return { w: b.readUInt32BE(16), h: b.readUInt32BE(20), type: "image/png" };
+    if (b[0] === 0xff && b[1] === 0xd8) {
+      let i = 2;
+      while (i + 9 < b.length) {
+        if (b[i] !== 0xff) { i++; continue; }
+        const m = b[i + 1];
+        if (m === 0xff) { i++; continue; }
+        if (m === 0xd8 || m === 0x01 || (m >= 0xd0 && m <= 0xd7)) { i += 2; continue; }
+        if (m >= 0xc0 && m <= 0xcf && m !== 0xc4 && m !== 0xc8 && m !== 0xcc) return { h: b.readUInt16BE(i + 5), w: b.readUInt16BE(i + 7), type: "image/jpeg" };
+        i += 2 + b.readUInt16BE(i + 2);
+      }
+    }
+    if (b.length > 30 && b.toString("ascii", 0, 4) === "RIFF" && b.toString("ascii", 8, 12) === "WEBP" && b.toString("ascii", 12, 16) === "VP8X") return { w: 1 + b.readUIntLE(24, 3), h: 1 + b.readUIntLE(27, 3), type: "image/webp" };
+  } catch (e) {}
+  return null;
+}
+function ogImageTags(url, alt) {
+  const s = imageSize(url);
+  const q = (t) => String(t || "").replace(/"/g, "&quot;");
+  return [
+    s ? `<meta property="og:image:type" content="${s.type}">` : "",
+    s ? `<meta property="og:image:width" content="${s.w}">` : "",
+    s ? `<meta property="og:image:height" content="${s.h}">` : "",
+    alt ? `<meta property="og:image:alt" content="${q(alt)}">` : ""
+  ];
+}
+// 페이지 본문의 사진 목록 (이미지 사이트맵용) — 로고·아이콘·외부 사진 제외
+function pageImages(html, file) {
+  const dir = "/" + path.relative(ROOT, path.dirname(file)).split(path.sep).join("/");
+  const body = html.replace(/<!-- seo:start[\s\S]*?<!-- seo:end -->\n?/i, "").replace(/<head[\s\S]*?<\/head>/i, "");
+  const out = [];
+  const seen = new Set();
+  for (const m of body.matchAll(/<img\b[^>]*>/gi)) {
+    const src = attr(m[0], "src") || attr(m[0], "data-src");
+    if (!src || /^data:/.test(src) || /logo|icon|sprite|favicon|symbol|tit_|\.svg(\?|$)/i.test(src)) continue;
+    let u;
+    if (/^https?:/.test(src)) { if (!src.startsWith(SITE_URL)) continue; u = src; }
+    else if (src.startsWith("/")) u = SITE_URL + src;
+    else u = SITE_URL + path.posix.normalize(path.posix.join(dir, src));
+    if (seen.has(u)) continue;
+    seen.add(u);
+    out.push({ loc: u, title: attr(m[0], "alt") });
+  }
+  return out;
+}
+
 function inject(file) {
   let html = fs.readFileSync(file, "utf8");
   const url = urlFor(file);
@@ -389,6 +448,7 @@ function inject(file) {
     `<meta property="og:title" content="${info.title.replace(/"/g, "&quot;")}">`,
     `<meta property="og:description" content="${info.description.replace(/"/g, "&quot;")}">`,
     `<meta property="og:image" content="${info.image}">`,
+    ...ogImageTags(info.image, info.h1 || info.title),
     isArticle ? `<meta property="article:published_time" content="${info.article.published}">` : "",
     isArticle ? `<meta property="article:modified_time" content="${info.article.modified}">` : "",
     isArticle ? `<meta property="article:author" content="${CLINIC.name}">` : "",
@@ -407,7 +467,7 @@ function inject(file) {
   html = html.replace(/^\s*<meta property="og:(title|description|image)"[^>]*>\n/gim, "");
   html = html.replace(/<\/head>/i, block + "\n</head>");
   fs.writeFileSync(file, html);
-  return { url, rel, title: info.title, description: info.description, faqs: info.faqs.length, crumbs: info.crumbs.length, article: isArticle, modified, category: info.article ? info.article.category : "", noindex };
+  return { images: pageImages(html, file), url, rel, title: info.title, description: info.description, faqs: info.faqs.length, crumbs: info.crumbs.length, article: isArticle, modified, category: info.article ? info.article.category : "", noindex };
 }
 
 // ---------- 실행 ----------
@@ -432,11 +492,23 @@ const sitemap =
   `\n</urlset>\n`;
 fs.writeFileSync(path.join(ROOT, "sitemap.xml"), sitemap);
 
+// sitemap-images.xml — 네이버·구글 이미지 검색용 (본문 사진 + alt). robots.txt 에도 등록한다
+const escXml = (s) => String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+const imgEntries = entries.filter((e) => !e.noindex && e.images && e.images.length);
+fs.writeFileSync(
+  path.join(ROOT, "sitemap-images.xml"),
+  `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n` +
+    imgEntries
+      .map((e) => `  <url>\n    <loc>${escXml(e.url)}</loc>\n` + e.images.slice(0, 200).map((i) => `    <image:image>\n      <image:loc>${escXml(i.loc)}</image:loc>${i.title ? `\n      <image:title>${escXml(i.title)}</image:title>` : ""}\n    </image:image>`).join("\n") + `\n  </url>`)
+      .join("\n") +
+    `\n</urlset>\n`
+);
+
 // robots.txt — 검색엔진 + AI 검색 크롤러 허용, 데이터 수집용 Bytespider 는 차단
 const AI_BOTS = ["GPTBot", "ChatGPT-User", "OAI-SearchBot", "Google-Extended", "PerplexityBot", "ClaudeBot", "anthropic-ai", "Applebot-Extended", "CCBot", "Yeti", "NaverBot"];
 fs.writeFileSync(
   path.join(ROOT, "robots.txt"),
-  `User-agent: *\nAllow: /\nDisallow: /admin/\nDisallow: /pages/columns/_data/\nDisallow: /pages/columns/_template.html\nDisallow: /pages/columns/_category.html\nDisallow: /components/\n\nSitemap: ${SITE_URL}/sitemap.xml\n\n` +
+  `User-agent: *\nAllow: /\nDisallow: /admin/\nDisallow: /pages/columns/_data/\nDisallow: /pages/columns/_template.html\nDisallow: /pages/columns/_category.html\nDisallow: /components/\n\nSitemap: ${SITE_URL}/sitemap.xml\nSitemap: ${SITE_URL}/sitemap-images.xml\n\n` +
     AI_BOTS.map((b) => `User-agent: ${b}\nAllow: /\n`).join("\n") +
     `\nUser-agent: Bytespider\nDisallow: /\n`
 );
